@@ -11,9 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140804074015) do
+ActiveRecord::Schema.define(:version => 20140804094639) do
 
   create_table "projects", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflows", :force => true do |t|
+    t.text     "definition", :null => false
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
