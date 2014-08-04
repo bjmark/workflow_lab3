@@ -38,6 +38,7 @@ gem 'haml-rails', '0.3.4'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 group :development, :test do
-#   gem 'webrat'
-  gem 'rspec-rails', '~> 3.0.0'
+# gem 'webrat'
+# gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails', '~> 2.14'
 end
