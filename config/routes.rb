@@ -1,5 +1,9 @@
 WorkflowLab::Application.routes.draw do
   resources :projects
+  
+  match '/_ruote' => RuoteKit::Application
+  match '/_ruote/*path' => RuoteKit::Application
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
