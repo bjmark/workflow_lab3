@@ -19,3 +19,4 @@
 #8-6
 #rails g controller users
 #ruby db/workflow_def/workflow_seed.rb
+rails g model process_journal

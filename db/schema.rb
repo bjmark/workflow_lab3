@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140805060831) do
+ActiveRecord::Schema.define(:version => 20140806032341) do
 
   create_table "departments", :force => true do |t|
     t.string  "name"
@@ -21,6 +21,22 @@ ActiveRecord::Schema.define(:version => 20140805060831) do
   create_table "departments_users", :id => false, :force => true do |t|
     t.integer "department_id"
     t.integer "user_id"
+  end
+
+  create_table "process_journals", :force => true do |t|
+    t.integer  "workflow_id"
+    t.integer  "user_id"
+    t.integer  "as_role_id"
+    t.text     "comments"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.boolean  "ok"
+    t.string   "wfid"
+    t.text     "original_tree"
+    t.text     "current_tree"
+    t.string   "workflow_action"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "projects", :force => true do |t|
