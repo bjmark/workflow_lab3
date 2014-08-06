@@ -74,7 +74,7 @@ class ProcessesController < ApplicationController
     ProcessJournal.create!(
       :workflow_id => workflow.id,
       :wfid => wfid,
-      :original_tree => workflow.tree_json,
+      #:original_tree => workflow.tree_json,
       :user_id => current_user.id,
       :comments => '发起流程',
       :workflow_action => '发起流程',
