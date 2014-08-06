@@ -7,7 +7,16 @@
     <%= csrf_meta_tag %>
   </head>
   <body>
-    user:<%= current_user ? current_user.name : 'not login' %>
+    <% if !current_user %>
+      user: not login
+    <% else %>
+      user:
+      <%= "#{current_user.name}"%>
+      |
+      <%= "#{current_user.roles.collect{|e| e.name + ':' + e.code }.inspect}" %>
+      |
+      <%= "#{current_user.departments.collect{|e| e.name}.inspect}" %>
+    <% end%>
     <%= yield %>
   </body>
 </html>
