@@ -7,6 +7,13 @@
     <%= csrf_meta_tag %>
   </head>
   <body>
+    <% if !flash.keys.empty? %>
+      <strong>
+        <% flash.each do |k,v| %>
+          <%= "#{k} : #{v}"%><br>
+        <% end %>
+      </strong>
+    <% end %>
     <% if !current_user %>
       user: not login
     <% else %>
@@ -21,6 +28,10 @@
     <%= link_to 'users', '/users' %>
     |
     <%= link_to 'projects', '/projects' %>
+    <hr>
+    <ul>
+      <li><%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %></li>
+    </ul>
     <hr>
     <%= yield %>
   </body>

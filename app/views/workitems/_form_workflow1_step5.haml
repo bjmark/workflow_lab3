@@ -1,0 +1,23 @@
+= form_tag workitem_path(@workitem), :class => "formtastic", :method => 'PUT'  do
+  %fieldset
+    %fieldset.column_left
+      %ol
+        %li
+          %label.label 审批意见(最多255个字)
+          %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5, :style => 'padding: 5px'}
+  .control.left
+    %input{:type => "hidden", :name => "wi_action", :value => "#{@wi_action}"}
+    终审权 : 
+    %select{:name =>"final_right", :size => "1"}
+      %option{:value => "step11"}风险部负责人
+      %option{:value => "step12"}分管副总裁
+      %option{:value => "step13", :selected => true}总裁
+    %br
+    %br
+    - @submit_values.each do |e|
+      = formtastic_workitem_submit_button(e, e , :proceed, "workitem_proceed")
+    = formtastic_cancel_to_previous_button
+  = clear_div
+= clear_div
+
+
