@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140806032341) do
+ActiveRecord::Schema.define(:version => 20140806034514) do
 
   create_table "departments", :force => true do |t|
     t.string  "name"
@@ -60,9 +60,32 @@ ActiveRecord::Schema.define(:version => 20140806032341) do
     t.integer "user_id"
   end
 
+  create_table "user_workflow_results", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "workflow_result_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", :force => true do |t|
     t.string  "name"
     t.boolean "admin"
+  end
+
+  create_table "workflow_results", :force => true do |t|
+    t.string   "workflow_name"
+    t.string   "wfid"
+    t.string   "target"
+    t.string   "result"
+    t.integer  "final_user_id"
+    t.string   "project"
+    t.datetime "process_at"
+    t.string   "target_type"
+    t.integer  "target_id"
+    t.string   "ok",            :limit => 1
+    t.string   "finish",        :limit => 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "workflow_statuses", :force => true do |t|
