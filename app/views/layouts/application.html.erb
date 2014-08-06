@@ -17,6 +17,11 @@
       |
       <%= "#{current_user.departments.collect{|e| e.name}.inspect}" %>
     <% end%>
+    <hr>
+    <%= link_to 'users', '/users' %>
+    |
+    <%= link_to 'projects', '/projects' %>
+    <hr>
     <%= yield %>
   </body>
 </html>
