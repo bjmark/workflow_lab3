@@ -17,4 +17,5 @@
 #rails runner db/seeds.rb
 
 #8-6
-rails g controller users
+#rails g controller users
+#ruby db/workflow_def/workflow_seed.rb
