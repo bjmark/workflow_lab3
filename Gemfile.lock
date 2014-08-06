@@ -31,6 +31,7 @@ GEM
     arel (2.0.10)
     blankslate (2.1.2.4)
     builder (2.1.2)
+    cancan (1.6.10)
     diff-lcs (1.2.5)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -182,6 +183,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cancan (= 1.6.10)
   haml-rails (= 0.3.4)
   mysql2 (< 0.3)
   rails (= 3.0.20)

@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -5,3 +7,173 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+
+Proc.new do
+  WorkflowStatus.delete_all
+  a = [
+    { :id => 1, :code => 'draft',     :name => '草稿' },
+    { :id => 2, :code => 'pending',   :name => '审批中' },
+    { :id => 3, :code => 'approved',  :name => '已批准' },
+    { :id => 4, :code => 'declined',  :name => '已否决' },
+    { :id => 5, :code => 'cancelled', :name => '已取消' },
+    { :id => 6, :code => 'failed',    :name => '工作流出错' },
+  ]
+
+  a.each do |e|
+    WorkflowStatus.new do |r|
+      r.id = e[:id]
+      r.code = e[:code]
+      r.name = e[:name]
+      r.save
+    end
+  end
+
+  #roles in workflows
+
+  #workflow1
+  #business_manager
+  #business_dept_head
+  #risk_dept_examiner
+  #risk_dept_legal_examiner
+  #risk_dept_legal_reviewer
+  #risk_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+  #vp
+  #president
+  
+  #workflow2
+  #business_manager
+  #business_dept_head
+  #risk_dept_examiner
+  #risk_dept_legal_examiner
+  #risk_dept_head
+  #capital_manager
+  #capital_market_dept_head
+
+  #workflow3
+  #business_manager
+  #business_dept_head
+  #risk_dept_disbursement_examiner
+  #risk_dept_disbursement_reviewer
+  #risk_dept_head
+  #capital_manager
+  #capital_market_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+  #vp
+  #president
+
+  #workflow4
+  #business_manager
+  #business_dept_head
+  #risk_dept_examiner
+  #risk_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+
+  #workflow5
+  #business_manager
+  #business_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+  #risk_dept_legal_examiner
+  #risk_dept_head
+
+  #workflow6
+  #capital_manager
+  #capital_market_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+  
+  #workflow7
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+
+  #workflow8
+  #business_manager
+  #business_dept_head
+  #risk_dept_asset_manager
+  #risk_dept_head
+  
+  #workflow9
+  #business_manager
+  #business_dept_head
+  #risk_dept_asset_manager
+  #risk_dept_head
+
+  #workflow10
+  #risk_dept_asset_manager
+  #risk_dept_head
+  
+  #workflow11
+  #risk_dept_asset_manager
+  #risk_dept_head
+
+  #workflow12
+  #business_manager
+  #business_dept_head
+  #risk_dept_examiner
+  #risk_dept_legal_examiner
+  #risk_dept_legal_reviewer
+  #risk_dept_head
+  #accounting_dept_accounting_post
+  #accounting_dept_head
+  #vp
+  #president
+
+  #建角色
+  Role.delete_all
+  h = {
+    '董事长' => 'board_chairman',
+    '总裁'   => 'president',
+    '副总裁'  => 'vp',
+    '风险管理部审查岗' => 'risk_dept_examiner',
+    '风险管理部复核岗' => 'risk_dept_reviewer',
+    '风险管理部资产管理岗' => 'risk_dept_asset_manager',
+    '风险管理部法务审核岗' => 'risk_dept_legal_examiner',
+    '风险管理部法务复核岗' => 'risk_dept_legal_reviewer',
+    '风险管理部负责人' => 'risk_dept_head',
+    '风险管理部放款审查岗' => 'risk_dept_disbursement_examiner',
+    '风险管理部放款复核岗' => 'risk_dept_disbursement_reviewer',
+    '综合管理部负责人' => 'admin_dept_head',
+    '计财部核算岗' => 'accounting_dept_accounting_post',
+    '计财部负责人' => 'accounting_dept_head',
+    '计财部考核岗' => 'accounting3',
+    '金融市场资金管理岗' => 'capital_manager',
+    '金融市场部负责人' => 'capital_market_dept_head',
+    '业务部门负责人' => 'business_dept_head',
+    '业务经理' => 'business_manager'
+  }
+
+  id = 0
+  h.each do |name, code|
+    id += 1
+    Role.new do |r|
+      r.id = id
+      r.name = name
+      r.code = code 
+      r.save
+    end
+  end
+
+  #建部门,只需要业务部
+  Department.delete_all
+  (1..2).each do |id|
+    Department.new do |r|
+      r.id = id
+      r.name = "业务#{id}部"
+      r.business_department = true
+      r.save
+    end
+  end
+
+  #建用户
+  User.delete_all
+  u = User.create(:name => '业务经理(业务1部)')
+  u.roles << Role.where(:code => 'business_manager').first
+  u.departments << Department.where(:name => '业务1部')
+    
+end.call
+

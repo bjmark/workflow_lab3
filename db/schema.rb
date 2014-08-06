@@ -11,12 +11,47 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140804094639) do
+ActiveRecord::Schema.define(:version => 20140805060831) do
+
+  create_table "departments", :force => true do |t|
+    t.string  "name"
+    t.boolean "business_department"
+  end
+
+  create_table "departments_users", :id => false, :force => true do |t|
+    t.integer "department_id"
+    t.integer "user_id"
+  end
 
   create_table "projects", :force => true do |t|
     t.string   "name"
+    t.integer  "handler_id"
+    t.integer  "cohandler_id"
+    t.integer  "workflow_status_id"
+    t.text     "hhash"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string  "name"
+    t.string  "code"
+    t.boolean "department_head", :default => false
+  end
+
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string  "name"
+    t.boolean "admin"
+  end
+
+  create_table "workflow_statuses", :force => true do |t|
+    t.string "name"
+    t.string "code"
   end
 
   create_table "workflows", :force => true do |t|
