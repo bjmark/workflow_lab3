@@ -144,6 +144,7 @@ Proc.new do
     '金融市场资金管理岗' => 'capital_manager',
     '金融市场部负责人' => 'capital_market_dept_head',
     '业务部门负责人' => 'business_dept_head',
+
     '业务经理' => 'business_manager'
   }
 
@@ -160,6 +161,7 @@ Proc.new do
 
   #建部门,只需要业务部
   Department.delete_all
+
   (1..2).each do |id|
     Department.new do |r|
       r.id = id
@@ -171,9 +173,72 @@ Proc.new do
 
   #建用户
   User.delete_all
-  u = User.create(:name => '业务经理(业务1部)')
-  u.roles << Role.where(:code => 'business_manager').first
+
+  ['A','B'].each do |e|
+    u = User.create(:name => "业务经理#{e}(业务1部)")
+    u.roles << Role.where(:code => 'business_manager').first
+    u.departments << Department.where(:name => '业务1部')
+  end
+
+  u = User.create(:name => "业务部门负责人(业务1部)")
+  u.roles << Role.where(:code => 'business_dept_head').first
   u.departments << Department.where(:name => '业务1部')
-    
+
+  ['A','B'].each do |e|
+    u = User.create(:name => "业务经理#{e}(业务2部)")
+    u.roles << Role.where(:code => 'business_manager').first
+    u.departments << Department.where(:name => '业务2部')
+  end
+
+  u = User.create(:name => "业务部门负责人(业务2部)")
+  u.roles << Role.where(:code => 'business_dept_head').first
+  u.departments << Department.where(:name => '业务2部')
+  
+  u = User.create(:name => "总裁")
+  u.roles << Role.where(:code => 'president').first
+
+
+  u = User.create(:name => "副总裁")
+  u.roles << Role.where(:code => 'vp').first
+
+
+  u = User.create(:name => "风险管理部审查岗")
+  u.roles << Role.where(:code => 'risk_dept_examiner').first
+  
+  u = User.create(:name => "风险管理部复核岗")
+  u.roles << Role.where(:code => 'risk_dept_reviewer').first
+  
+  u = User.create(:name => "风险管理部法务审核岗")
+  u.roles << Role.where(:code => 'risk_dept_asset_manager').first
+
+  u = User.create(:name => "风险管理部法务复核岗")
+  u.roles << Role.where(:code => 'risk_dept_legal_reviewer').first
+  
+  u = User.create(:name => "风险管理部负责人")
+  u.roles << Role.where(:code => 'risk_dept_head').first
+
+  u = User.create(:name => "风险管理部放款审查岗")
+  u.roles << Role.where(:code => 'risk_dept_disbursement_examiner').first
+  
+  u = User.create(:name => "风险管理部放款复核岗")
+  u.roles << Role.where(:code => 'risk_dept_disbursement_reviewer').first
+  
+  u = User.create(:name => "综合管理部负责人")
+  u.roles << Role.where(:code => 'admin_dept_head').first
+  
+  u = User.create(:name => "计财部核算岗")
+  u.roles << Role.where(:code => 'accounting_dept_accounting_post').first
+  
+  u = User.create(:name => "计财部负责人")
+  u.roles << Role.where(:code => 'accounting_dept_head').first
+  
+  u = User.create(:name => "计财部考核岗")
+  u.roles << Role.where(:code => 'accounting3').first
+  
+  u = User.create(:name => "金融市场资金管理岗")
+  u.roles << Role.where(:code => 'capital_manager').first
+  
+  u = User.create(:name => "金融市场部负责人")
+  u.roles << Role.where(:code => 'capital_market_dept_head').first
 end.call
 
