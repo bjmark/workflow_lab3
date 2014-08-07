@@ -1,6 +1,7 @@
-%h1 '业务流程待处理事物'
+%h1 业务流程待处理事物
 = "#{@workitem.wf_name}流程"
 = render '/process_journals/table', :process_journals => ProcessJournal.for_workitem(@workitem.wfid)
+%br
 = render @form
 = render "#{@workitem.target.class.to_s.tableize}/overview", :target => @workitem.target 
 

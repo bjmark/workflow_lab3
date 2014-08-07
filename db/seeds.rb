@@ -209,7 +209,7 @@ Proc.new do
   u.roles << Role.where(:code => 'risk_dept_reviewer').first
   
   u = User.create(:name => "风险管理部法务审核岗")
-  u.roles << Role.where(:code => 'risk_dept_asset_manager').first
+  u.roles << Role.where(:code => 'risk_dept_legal_examiner').first
 
   u = User.create(:name => "风险管理部法务复核岗")
   u.roles << Role.where(:code => 'risk_dept_legal_reviewer').first

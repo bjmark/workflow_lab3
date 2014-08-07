@@ -1,18 +1,13 @@
-= form_tag workitem_path(@workitem), :class => "formtastic", :method => 'PUT'  do
-  %fieldset
-    %fieldset.column_left
-      %ol
-        %li
-          %label.label 审批意见(最多255个字)
-          %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5, :style => 'padding: 5px'}
-  .control.left
-    - @message.each do |m|
-      = m
-      %br
-    - @submit_values.each do |e|
-      = formtastic_workitem_submit_button(e, e , :proceed, "workitem_proceed")
-    = formtastic_cancel_to_previous_button
-  = clear_div
-= clear_div
+= form_tag workitem_path(@workitem), :method => 'PUT'  do
+  %label 审批意见(最多255个字)
+  %br
+  %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5}
+  %br
+  - @message.each do |m|
+    = m
+    %br
+  - @submit_values.each do |e|
+    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+  = link_to '取消', request.env['HTTP_REFERER']
 
 
