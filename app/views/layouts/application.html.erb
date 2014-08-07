@@ -18,6 +18,8 @@
       user: not login
     <% else %>
       user:
+      <%= current_user.id %>
+      |
       <%= "#{current_user.name}"%>
       |
       <%= "#{current_user.roles.collect{|e| e.name + ':' + e.code }.inspect}" %>
@@ -25,6 +27,8 @@
       <%= "#{current_user.departments.collect{|e| e.name}.inspect}" %>
     <% end%>
     <hr>
+    <%= link_to 'ruote', '/_ruote' %>
+    |
     <%= link_to 'users', '/users' %>
     |
     <%= link_to 'projects', '/projects' %>

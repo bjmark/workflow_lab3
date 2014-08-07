@@ -1,17 +1,3 @@
-- content_for :title, '业务流程待处理事物列表'
-- navigation_add '概览', '/sysadmin'
-#main
-  #block-tables.block
-    = secondary_nav(:dashboard)
-    .content
-      = breadcrumb
-      .inner
-        = flash_message
-        .inner
-          = render "table", :workitems => @workitems, :title => @title, :readonly => @readonly
-      = breadcrumb
-  .wat-cf
-#sidebar
-  = sidebar_alert
-  - if current_user.admin?
-    = sysadmin_sidebar_nav :workitems
+%h1 流程待办事项
+= render "table"
+

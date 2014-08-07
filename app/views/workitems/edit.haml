@@ -1,56 +1,7 @@
-= stylesheet_link_tag "/stylesheets/fluo-dial.css", "/stylesheets/ruote-fluo-editor.css"
-= javascript_include_tag  '/javascripts/_ruote/ruote-fluo.js', '/javascripts/_ruote/ruote-fluo-editor.js'
-- content_for :title, '业务流程待处理事物'
-- navigation_add '概览', '/dashboard'
-#main
-  #block-tables.block
-    = secondary_nav(:dashboard)
-    .content
-      = breadcrumb
-      .inner
-        .inner
-          = flash_message
-          .control
-            = formtastic_refresh_button
-            = formtastic_show_workitem_diagram_button(@workitem)
-          = title_badge "#{@workitem.wf_name}流程", nil, "流转"
-          = clear_div
-          = render '/process_journals/table', :process_journals => ProcessJournal.for_workitem(@workitem.wfid)
-          = render @form
-          %br/
-          %br/
-          %br/
-          #ruote_fluo{:style => 'display: none'}
-            = render '/workitems/fluo', :workitem => @workitem
-          = render "#{@workitem.target.class.to_s.tableize}/overview", :target => @workitem.target 
+%h1 '业务流程待处理事物'
+= "#{@workitem.wf_name}流程"
+= render '/process_journals/table', :process_journals => ProcessJournal.for_workitem(@workitem.wfid)
+= render @form
+= render "#{@workitem.target.class.to_s.tableize}/overview", :target => @workitem.target 
 
-          :javascript
-            // fluo
-            document.getElementById('fluo').noOuterBorder = true;
-            Fluo.renderFlow( 'fluo', #{@workitem.process_tree_json}, { workitems: [ '#{@workitem.fei.expid}' ] });
-            Fluo.crop('fluo');
 
-            // center the canvas
-            $('#fluo').attr("style", 'display: block; margin-left: auto; margin-right: auto');
-            // open the fluo dialog
-            $('#ruote_fluo').dialog({
-              autoOpen : false,
-              width : 700,
-              height: 500,
-              title: "流程图",
-              buttons : {
-                "确定" : function() {
-                  $(this).dialog("close");
-                },
-              }
-            });
-
-            $('#show_ruote_fluo').bind('click', function() {
-              $('#ruote_fluo').dialog('open');
-            });
-      = breadcrumb
-  .wat-cf
-#sidebar
-  = sidebar_alert
-  - if current_user.admin?
-    = sysadmin_sidebar_nav :workitems

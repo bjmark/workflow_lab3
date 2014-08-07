@@ -1,6 +1,9 @@
 WorkflowLab::Application.routes.draw do
   resources :projects
   resources :users
+  resources :processes
+  resources :workitems
+
   match 'users/login/:id', :to => 'users#login'
   
   match '/_ruote' => RuoteKit::Application

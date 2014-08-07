@@ -2,16 +2,21 @@
 
 %table
   %tr
-    %th
+    %th 名称
+    %th 主办
+    %th workflow_status
     %th
     %th
 
   - @projects.each do |project|
     %tr
       %td= project.name
-      %td= link_to 'Show', project
-      %td= link_to 'Edit', edit_project_path(project)
-      %td= link_to 'Destroy', project, :confirm => 'Are you sure?', :method => :delete
+      %td= project.handler.try(:name)
+      %td= project.workflow_status.try(:name)
+      - #%td= link_to 'Show', project
+      - #%td= link_to 'Edit', edit_project_path(project)
+      %td= link_to '删除', project, :confirm => 'Are you sure?', :method => :delete
+      %td= link_to '审签', new_process_path(:workflow_id => 1, :target_type => 'project', :target_id => project.id),:confirm => 'Are you sure?'
 
 %br
 

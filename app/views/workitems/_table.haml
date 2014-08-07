@@ -1,31 +1,20 @@
-- readonly ||= false
-- title ||= "流程待办事项"
-.title{:style=>'padding:20px 0 0;'}
-  .red.counter{:style=>'width:80px; margin:0 0 20px 10px;'}= title
-%table.table
+%table
   %thead
     %tr
-      %th.table-head 流程名称
-      %th.table-head 流程对象
-      %th.table-head 发起部门
-      %th.table-head 当前处理人
-      %th.table-head 派发时间
-      %th.last
+      %th 流程名称
+      %th 流程对象
+      %th 发起部门
+      %th 当前处理人
+      %th 派发时间
+      %th
   %tbody
-    - reset_haml_class
-    - workitems.each do |wi|
-      %tr{ :class => cycle('odd', 'even') }
-        %td= workflow_name(wi.wf_name)
+    - @workitems.each do |wi|
+      %tr
+        %td= wi.wf_name
         %td= wi.target.try(:name)
-        %td
-          -# user_id = wi.fields['initiator']['user_id'].to_i
-          -# department = User.find(user_id).departments.first
-          -#= department.name
-          = wi.business_department.try(:name)
+        %td= wi.business_department.try(:name)
         %td= wi.current_position
         %td= wi.dispatch_time
         %td.last
-          - if readonly
-            = workitem_view_icon(wi)
-          -else
-            = workitem_handle_icon(wi)
+          = link_to '处理', edit_workitem_path(wi)
+
