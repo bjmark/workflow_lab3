@@ -23,3 +23,6 @@
 #rails g model workflow_result
 #rails g model user_workflow_result
 #rails g controller workitems
+
+#8-7
+rails g controller process_journals

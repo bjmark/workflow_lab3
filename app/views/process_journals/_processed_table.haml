@@ -1,0 +1,63 @@
+- title ||= "已办结的事项"
+.title{:style=>'padding:20px 0 0;'}
+  .blue.counter{:style=>'width:80px; margin:0 0 20px 10px;'}= title
+%form.form{:action => "#"}
+  %table.table
+    %thead
+      %tr
+        %th.table-head 流程名称
+        %th.table-head 流程对象
+        %th.table-head 处理时间
+        %th.table-head 处理意见
+        %th.table-head 处理用户
+        %th.last
+    - process_journals.each do |p|
+      %tbody
+        %tr{ :class => cycle('odd', 'even') }
+          %td= @work_flow[p.wfid]
+          %td= p.owner.name
+          %td= beijing_time(p.created_at)
+          %td= p.comments
+          %td= p.user.name
+          %td.last= custom_icon('#',:show,"查看审批审见","onClick = \"show_comments('#{p.wfid}');\"")
+  = paginate @process_journals if @process_journals
+#process_comments{:style => 'display: none'}
+.wat-cf
+:javascript
+  $('#process_comments').dialog({
+    autoOpen : false,
+    width : 780,
+    height: 500,
+    title: "审批意见",
+    buttons : {
+      "确定" : function() {
+        $(this).dialog("close");
+      },
+    }
+  });
+  
+    var xhr;
+    var timer;
+    var show_comments = function(wfid) {
+      if(xhr && xhr.readyState != 4){
+          xhr.abort();
+      }
+      url = "../process_journals/get_comments?wfid=" + wfid
+      xhr = $.ajax({
+        type: 'get',
+        url: url,
+        dataType: 'html',
+        success: function(data) {
+          $('#process_comments').html(data);
+          $('#process_comments').dialog('open');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          if ( textStatus != 'abort' ) {
+            //alert(textStatus);
+            }
+          
+        },
+        complete: function() {}
+      });
+      return false;
+    };

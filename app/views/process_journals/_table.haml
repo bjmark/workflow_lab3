@@ -1,0 +1,17 @@
+%h3  审批意见
+%table{:border=>1}
+  %thead
+    %tr
+      %th 审批人
+      %th 岗位
+      %th 审批时间
+      %th 流转
+      %th{:width => '30%'} 审批意见
+  %tbody
+    - process_journals.each do |j|
+      %tr
+        %td= j.user.try(:name)
+        %td= j.try(:role).try(:name)
+        %td= j.updated_at.beijing_time
+        %td= j.workflow_action
+        %td{:width => '30%'}= j.comments
