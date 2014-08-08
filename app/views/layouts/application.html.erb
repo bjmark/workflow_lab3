@@ -38,6 +38,8 @@
     <%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %>
     |
     <%= link_to '流程已办事项', "/processes" %>
+    |
+    <%= link_to '流程办结事项', "/workflow_results" %>
     <hr>
     <%= yield %>
   </body>
