@@ -1,4 +1,6 @@
 WorkflowLab::Application.routes.draw do
+  resources :disbursement_applications
+
   resources :projects
   resources :users
   resources :processes

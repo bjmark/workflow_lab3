@@ -10,10 +10,11 @@ class WorkflowResult < ActiveRecord::Base
     case obj
     when Project
       target = project = obj.name
-    when CashPosition
-      target = project = obj.project.name
+    #when CashPosition
+    #  target = project = obj.project.name
     when DisbursementApplication
-      target = project = obj.cash_position.project.name
+      #target = project = obj.cash_position.project.name
+      target = project = obj.name
     when Payment
       target = project = obj.disbursement_application.cash_position.project.name
     when ContractApplication, ContractCloseApplication
