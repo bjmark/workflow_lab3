@@ -17,4 +17,9 @@ class Project < ActiveRecord::Base
 
   def on_workflow_completion(approved, workitem)
   end
+
+  def on_workflow_cancel
+    self.workflow_status_id = 5
+    self.save
+  end
 end

@@ -1,0 +1,69 @@
+.control.right
+  = formtastic_show_workflow_diagram_button(@workflow)
+= title_badge "业务流程", nil, "发起"
+= clear_div
+= flash_message
+= form_tag processes_path, :method => 'POST', :class => "formtastic" do
+  %fieldset.column_left
+    %fieldset.column_left
+      %ol
+        = fake_input_field_with_link("流程名称", link_to(@workflow.name, workflow_path(@workflow), :target => '_blank'), "process[workflow_id]", @workflow.id)
+    %fieldset.column_right
+      %ol
+        %li
+          %label.label 发起人
+          %span{ :style => "float: left" }= current_user.name
+          %input{ :type => "hidden", :value => "#{current_user.id}", :name => "process[user_id]" }
+    = clear_div
+  %fieldset.column_right
+    %ol
+      %li
+        %label.label 流程对象
+        %span{ :style => "float: left" }= link_to @target.name, "/#{@target_type.to_s.downcase.pluralize}/#{@target.id}", :target => '_blank'
+        %input{ :type => "hidden", :value => "#{@target.id}", :name => "process[target_id]" }
+        %input{ :type => "hidden", :value => "#{@target_type}", :name => "process[target_type]" }
+        -#= workflow_status_badge(@target.workflow_status)
+        -#%label.label 流程对象类型
+        -#%span{ :style => "float: left" }= t("workflow.process.target.#{@target_type.to_s.downcase}")
+    = clear_div
+  = clear_div
+  %br/
+  %br/
+  .badge-grey 流程意见
+  %br/
+  %br/
+  %fieldset
+    %ol
+      %li
+        %label.label 意见
+        %textarea{:name => 'process[comments]', :cols => 80, :rows => 5, :style => 'padding: 5px'}
+  = clear_div
+  %br/
+  %hr
+  .group.navform.wat-cf
+    = formtastic_cancel_to_previous_button
+    = formtastic_process_launch_button(@workflow)
+#ruote_fluo{:style => 'display: none'}
+  = render '/workflows/fluo', :workflow => @workflow
+:javascript
+  // fluo
+  document.getElementById('fluo').noOuterBorder = true;
+  Fluo.renderFlow( 'fluo', #{@workflow.tree_json});
+  Fluo.crop('fluo');
+
+  // open the fluo dialog
+  $('#ruote_fluo').dialog({
+    autoOpen : false,
+    width : 600,
+    height: 500,
+    title: "流程图",
+    buttons : {
+      "确定" : function() {
+        $(this).dialog("close");
+      },
+    }
+  });
+
+  $('#show_ruote_fluo').bind('click', function() {
+    $('#ruote_fluo').dialog('open');
+  });

@@ -27,15 +27,15 @@
       <%= "#{current_user.departments.collect{|e| e.name}.inspect}" %>
     <% end%>
     <hr>
-    <%= link_to 'ruote', '/_ruote' %>
+    <%= link_to '流程管理', '/_ruote' %>
     |
-    <%= link_to 'users', '/users' %>
+    <%= link_to '切换用户', '/users' %>
     |
-    <%= link_to 'projects', '/projects' %>
+    <%= link_to '项目', '/projects' %>
     <hr>
-    <ul>
-      <li><%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %></li>
-    </ul>
+    <%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %>
+    |
+    <%= link_to '流程已办事项', "/processes" %>
     <hr>
     <%= yield %>
   </body>

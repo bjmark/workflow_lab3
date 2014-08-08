@@ -1,21 +1,4 @@
-= stylesheet_link_tag "/stylesheets/fluo-dial.css", "/stylesheets/ruote-fluo-editor.css"
-= javascript_include_tag  '/javascripts/_ruote/ruote-fluo.js', '/javascripts/_ruote/ruote-fluo-editor.js'
-- content_for :title, '业务流程'
-- navigation_add '概览', '/dashboard'
-#main
-  #block-tables.block
-    = secondary_nav(:dashboard)
-    .content
-      = breadcrumb
-      .inner
-        = title_badge "#{@workflow_name}流程", nil, "流转"
-        = clear_div
-        = render '/process_journals/table', :process_journals => @process_journals
-        - if !@target.blank?
-          = render "#{@target.class.to_s.tableize}/overview", :target => @target
-      = breadcrumb
-  .wat-cf
-#sidebar
-  = sidebar_alert
-  - if current_user.admin?
-    = sysadmin_sidebar_nav :processes
+%h1  "#{@workflow_name}流程"
+= render '/process_journals/table', :process_journals => @process_journals
+- if !@target.blank?
+  = render "#{@target.class.to_s.tableize}/overview", :target => @target
