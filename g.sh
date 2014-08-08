@@ -25,4 +25,7 @@
 #rails g controller workitems
 
 #8-7
-rails g controller process_journals
+#rails g controller process_journals
+
+#8-8
+rails g scaffold disbursement_application

@@ -1,0 +1,19 @@
+%h1 放款申请
+
+%table{:border => 1}
+  %tr
+    %th 名称
+    %th workflow_status
+    %th
+    %th
+
+  - @disbursement_applications.each do |disbursement_application|
+    %tr
+      %td= disbursement_application.name
+      %td= disbursement_application.workflow_status.name
+      %td= link_to '删除', disbursement_application, :confirm => 'Are you sure?', :method => :delete
+      %td= link_to '审签', new_process_path(:workflow_id => 3, :target_type => 'disbursement_application', :target_id => disbursement_application.id),:confirm => 'Are you sure?'
+
+%br
+
+= link_to '新建放款', new_disbursement_application_path
