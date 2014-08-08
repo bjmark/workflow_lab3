@@ -6,6 +6,7 @@ WorkflowLab::Application.routes.draw do
   resources :processes
   resources :workitems
   resources :process_journals
+  resources :workflow_results
 
   match 'users/login/:id', :to => 'users#login'
   
