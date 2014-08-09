@@ -33,6 +33,8 @@
     |
     <%= link_to '项目', '/projects' %>
     |
+    <%= link_to '头寸', '/cash_positions' %>
+    |
     <%= link_to '放款申请', '/disbursement_applications' %>
     <hr>
     <%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %>

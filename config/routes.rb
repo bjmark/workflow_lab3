@@ -1,4 +1,6 @@
 WorkflowLab::Application.routes.draw do
+  resources :cash_positions
+
   resources :disbursement_applications
 
   resources :projects
