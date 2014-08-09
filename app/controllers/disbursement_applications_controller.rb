@@ -40,8 +40,20 @@ class DisbursementApplicationsController < ApplicationController
   # POST /disbursement_applications
   # POST /disbursement_applications.xml
   def create
+    project = Project.create!(
+      :name => "created by #{params[:disbursement_application][:name]}", 
+      :workflow_status_id => 1,
+      :handler_id => current_user.id
+    )
+
+    cash_position = CashPosition.create!(
+      :name => "created by #{params[:disbursement_application][:name]}", 
+      :workflow_status_id => 1,
+      :project_id => project.id
+    )
     @disbursement_application = DisbursementApplication.new(params[:disbursement_application])
     @disbursement_application.workflow_status_id = 1
+    @disbursement_application.cash_position_id = cash_position.id
 
     respond_to do |format|
       if @disbursement_application.save

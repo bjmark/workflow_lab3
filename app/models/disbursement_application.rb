@@ -1,5 +1,6 @@
 class DisbursementApplication < ActiveRecord::Base
   belongs_to :workflow_status
+  belongs_to :cash_position
 
   def on_workflow_launch
   end

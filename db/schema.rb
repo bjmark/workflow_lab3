@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140808065851) do
+ActiveRecord::Schema.define(:version => 20140809032439) do
+
+  create_table "cash_positions", :force => true do |t|
+    t.string   "name"
+    t.integer  "project_id"
+    t.integer  "workflow_status_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "departments", :force => true do |t|
     t.string  "name"
@@ -26,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20140808065851) do
   create_table "disbursement_applications", :force => true do |t|
     t.string   "name"
     t.integer  "workflow_status_id"
+    t.integer  "cash_position_id"
     t.text     "hhash"
     t.datetime "created_at"
     t.datetime "updated_at"
