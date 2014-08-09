@@ -79,6 +79,8 @@ class WorkitemsController < ApplicationController
   end
 
   def update
+    #log message
+    log_msg = []
     workitem = RuoteKit.storage_participant[params[:id]]
 
     # workitem _CANNOT_ be located, meaning it has been handled by somebody else
@@ -105,6 +107,7 @@ class WorkitemsController < ApplicationController
           return
         end
       when 'workflow3_validate'
+        log_msg << "workflow3_validate #{workitem.participant_name}"
         if !workitem.target.bypass_validate('receivable_clear?') and
           !workitem.target.cash_position.receivable_clear?
           flash[:error] = "放款前应收的中间业务收入或保证金未全部核销"
@@ -150,7 +153,7 @@ class WorkitemsController < ApplicationController
       #:current_tree => RuoteKit.engine.process(workitem.wfid).current_tree,
       :user_id => current_user.id,
       :as_role_id => Role.find_by_code(workitem.participant_name).id,
-      :comments => params[:workitem][:comments],
+      :comments => params[:workitem][:comments] + log_msg.join(','),
       :workflow_action => op_name,
       :owner_type => workitem.fields["target"]["type"].camelize,
       :owner_id => workitem.fields["target"]["id"],

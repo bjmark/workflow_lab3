@@ -29,4 +29,7 @@
 
 #8-8
 #rails g scaffold disbursement_application
-rails g controller workflow_results
+#rails g controller workflow_results
+
+#8-9
+rails g scaffold cash_position
