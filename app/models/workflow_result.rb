@@ -14,8 +14,8 @@ class WorkflowResult < ActiveRecord::Base
       target = project = obj.project.name
     when DisbursementApplication
       target = project = obj.cash_position.project.name
-    when Payment
-      target = project = obj.disbursement_application.cash_position.project.name
+    #when Payment
+    #  target = project = obj.disbursement_application.cash_position.project.name
     when ContractApplication, ContractCloseApplication
       target = project = obj.financial_term.owner.name
     when Factoring

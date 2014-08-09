@@ -11,12 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140809032439) do
+ActiveRecord::Schema.define(:version => 20140809131619) do
 
   create_table "cash_positions", :force => true do |t|
     t.string   "name"
     t.integer  "project_id"
     t.integer  "workflow_status_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contract_applications", :force => true do |t|
+    t.string   "name"
+    t.integer  "financial_term_id"
+    t.integer  "workflow_status_id", :default => 1, :null => false
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -36,6 +45,13 @@ ActiveRecord::Schema.define(:version => 20140809032439) do
     t.integer  "workflow_status_id"
     t.integer  "cash_position_id"
     t.text     "hhash"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "financial_terms", :force => true do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
