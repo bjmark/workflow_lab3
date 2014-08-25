@@ -1,0 +1,12 @@
+%h1 Listing workflow_logs
+
+%table
+  %tr
+    %th message
+
+  - @workflow_logs.each do |workflow_log|
+    %tr
+      %td= workflow_log.message
+%br
+
+=link_to 'Delete all', '/workflow_logs/delete_all', :confirm => 'Are you sure?', :method => :delete

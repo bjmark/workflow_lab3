@@ -41,6 +41,8 @@ class ProjectsController < ApplicationController
   # POST /projects.xml
   def create
     @project = Project.new(params[:project])
+    @project.handler_id = current_user.id
+    @project.workflow_status_id = 1
 
     respond_to do |format|
       if @project.save

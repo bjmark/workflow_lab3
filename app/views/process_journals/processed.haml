@@ -1,0 +1,18 @@
+- content_for :title, '已办结的事项'
+#main
+  #block-tables.block
+    = secondary_nav(:dashboard)
+    .content
+      = breadcrumb
+      .inner
+        .control
+          = search_box :process_journals
+        #process_journals
+          = render "processed_table", :process_journals => @Process_Journals
+      = breadcrumb
+  .wat-cf
+#sidebar
+  = sidebar_alert
+:javascript
+  $('#process_journals_search').attr("action","/process_journals/processed")
+  Blade.live_search($('#process_journals_search'),$('#process_journals'));

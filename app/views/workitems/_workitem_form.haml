@@ -1,0 +1,125 @@
+.control
+  = formtastic_refresh_button
+  = formtastic_show_process_comments_button(workitem)
+  = formtastic_show_workitem_diagram_button(workitem)
+= title_badge "#{workitem.wf_name}流程", nil, "流转"
+= form_tag workitem_path(workitem), :class => "formtastic", :method => 'PUT'  do
+  %fieldset.column_left
+    %fieldset.column_left
+      %ol
+        %li
+          %label.label 发起人
+          %span{ :style => "float: left" }= workitem.initiator.try(:name)
+    %fieldset.column_right
+      %ol
+        %li
+          %label.label 发起业务部门
+          %span{ :style => "float: left" }= workitem.business_department.try(:name)
+    = clear_div
+  %fieldset.column_right
+    %fieldset.column_left
+      %ol
+        %li
+          %label.label 流程对象
+          %span{ :style => "float: left" }
+            = t("workflow.process.target.#{workitem.target.class.to_s.downcase}")
+    %fieldset.column_right
+      %ol
+        %li
+          %label.label 名称
+          %span{ :style => "float: left" }
+            = link_to workitem.target.try(:name),
+              "/#{workitem.target.class.to_s.downcase.pluralize}/#{workitem.target.id}/overview",
+              :target => '_blank'
+    = clear_div
+  = clear_div
+  %br/
+  .badge-grey 流程审核
+  %br/
+  %br/
+  %fieldset
+    %fieldset.column_left
+      %ol
+        %li
+          %label.label 意见
+          %textarea{:name => 'workitem[comments]', :cols => 65, :rows => 5, :style => 'padding: 5px'}
+    %fieldset.column_right
+      %fieldset.column_left
+        %ol
+          %li.radio.input.required
+            %fieldset.choices
+              %legend.label 处理决定
+              %ol.choices-group
+                %li.choice
+                  %label.label{:for => 'workitem_ok_1'}
+                    同意
+                    %input{:type => :radio, :checked => "checked", :name => 'workitem[fields][ok]', :id => 'workitem_ok_1', :value => 1}
+                %li.choice
+                  %label.label{:for => 'workitem_ok_0'}
+                    不同意
+                    %input{:type => :radio, :name => 'workitem[fields][ok]', :id => 'workitem_ok_0', :value => 0}
+      %fieldset.column_left
+        %ol
+          %li.select.input.optional
+            %label.label 退回
+            %select{:id => 'workitem_return_to', :name => 'workitem[fields][return_to]'}
+              %option
+              %option 发起人
+              %option 业务部门负责人
+    = clear_div
+    %hr
+  .control.left
+    -#= formtastic_workitem_return_button(workitem)
+    -#= formtastic_workitem_release_button(workitem)
+    -#= formtastic_workitem_save_button(workitem)
+    = formtastic_workitem_proceed_button(workitem)
+  .control.right
+    = formtastic_cancel_to_previous_button
+  = clear_div
+= clear_div
+%br/
+#ruote_fluo{:style => 'display: none'}
+  = render 'fluo', :workitem => workitem
+#process_comments{:style => 'display: none'}
+  = render '/process_journals/table', :process_journals => ProcessJournal.for_workitem(workitem.wfid)
+-#%h1{:style => 'fontweight: bold; text-align: center'}
+  -#%strong= workitem.target.name
+-# @project = workitem.target
+-#= render 'projects/overview'
+
+:javascript
+  // fluo
+  document.getElementById('fluo').noOuterBorder = true;
+  Fluo.renderFlow( 'fluo', #{workitem.process_tree_json}, { workitems: [ '#{workitem.fei.expid}' ] });
+  Fluo.crop('fluo');
+
+  // open the fluo dialog
+  $('#ruote_fluo').dialog({
+    autoOpen : false,
+    width : 600,
+    title: "流程图",
+    buttons : {
+      "确定" : function() {
+        $(this).dialog("close");
+      },
+    }
+  });
+
+  $('#show_ruote_fluo').bind('click', function() {
+    $('#ruote_fluo').dialog('open');
+  });
+
+  $('#process_comments').dialog({
+    autoOpen : false,
+    width : 700,
+    title: "审批意见",
+    buttons : {
+      "确定" : function() {
+        $(this).dialog("close");
+      },
+    }
+  });
+
+  $('#show_comments').bind('click', function() {
+    $('#process_comments').dialog('open');
+  });

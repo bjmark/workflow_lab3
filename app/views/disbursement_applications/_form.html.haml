@@ -1,0 +1,12 @@
+= form_for @disbursement_application do |f|
+  -if @disbursement_application.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@disbursement_application.errors.count, "error")} prohibited this disbursement_application from being saved:"
+      %ul
+        - @disbursement_application.errors.full_messages.each do |msg|
+          %li= msg
+  name:
+  = f.text_field :name
+
+  .actions
+    = f.submit 'Save'

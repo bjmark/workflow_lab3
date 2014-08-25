@@ -1,0 +1,19 @@
+= stylesheet_link_tag "/stylesheets/fluo-dial.css", "/stylesheets/ruote-fluo-editor.css"
+= javascript_include_tag  '/javascripts/_ruote/ruote-fluo.js', '/javascripts/_ruote/ruote-fluo-editor.js'
+- content_for :title, '业务流程待处理事物'
+- navigation_add '概览', '/dashboard'
+#main
+  #block-tables.block
+    = secondary_nav(:dashboard)
+    .content
+      = breadcrumb
+      .inner
+        = flash_message
+        .inner
+          = render "form", :workitem => @workitem, :readonly => true
+      = breadcrumb
+  .wat-cf
+#sidebar
+  = sidebar_alert
+  - if current_user.admin?
+    = sysadmin_sidebar_nav :workitems

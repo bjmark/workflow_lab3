@@ -1,0 +1,2 @@
+module ProcessJournalsHelper
+end

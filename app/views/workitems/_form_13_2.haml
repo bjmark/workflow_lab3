@@ -1,0 +1,21 @@
+= form_tag workitem_path(@workitem), :method => 'PUT'  do
+  %input{:type => 'radio', :name => 'suggest', :value => 'aggree'}同意
+  %input{:type => 'text', :name => 'aggree'}
+  %br
+  %input{:type => 'radio', :name => 'suggest', :value => 'deny'}否决
+  %input{:type => 'text', :name => 'deny'}
+  %br
+  %input{:type => 'radio', :name => 'suggest', :value => 'aggree_with_condition'}有条件同意
+  %input{:type => 'text', :name => 'aggree_with_condition'}
+  %br
+  %input{:type => 'radio', :name => 'suggest', :value => 'suspend'}暂缓
+  %input{:type => 'text', :name => 'suspend'}
+  %br
+  - @message.each do |m|
+    = m
+    %br
+  - @submit_values.each do |e|
+    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+  = link_to '取消', request.env['HTTP_REFERER']
+
+

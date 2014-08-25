@@ -1,0 +1,19 @@
+= form_tag workitem_path(@workitem), :method => 'PUT'  do
+  %label.label 审批意见(最多255个字)
+  %br
+  %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5, :style => 'padding: 5px'}
+  %br
+  - @message.each do |m|
+    = m
+    %br
+  %input{:type => "hidden", :name => "wi_action", :value => "#{@wi_action}"}
+  修改本事项的终审权人为 : 
+  %select{:name =>"final_right", :size=>"1"}
+    - @final_right_options.each do |k,v|
+      %option{:value=>k, :selected=>(@final_right == k)}= v 
+  %br
+  - @submit_values.each do |e|
+    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+  = link_to '取消', request.env['HTTP_REFERER']
+
+

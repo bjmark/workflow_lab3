@@ -1,0 +1,3 @@
+%ul
+  - @users.each do |e|
+    %li= link_to e.name, "users/login/#{e.id}"

@@ -1,0 +1,20 @@
+%table{:border => 1}
+  %thead
+    %tr
+      %th 流程名称
+      %th 流程对象
+      %th 发起部门
+      %th 当前处理人
+      %th 派发时间
+      %th
+  %tbody
+    - @workitems.each do |wi|
+      %tr
+        %td= wi.wf_name
+        %td= wi.target.try(:name)
+        %td= wi.business_department.try(:name)
+        %td= wi.current_position
+        %td= wi.dispatch_time
+        %td.last
+          = link_to '处理', edit_workitem_path(wi)
+

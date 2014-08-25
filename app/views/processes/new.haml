@@ -1,0 +1,19 @@
+= stylesheet_link_tag "/stylesheets/fluo-dial.css", "/stylesheets/ruote-fluo-editor.css"
+= javascript_include_tag  '/javascripts/_ruote/ruote-fluo.js', '/javascripts/_ruote/ruote-fluo-editor.js'
+- content_for :title, "发起业务流程"
+- navigation_add '系统管理', '/sysadmin'
+- navigation_add '业务流程列表', workflows_path
+#main
+  #block-innernav.block
+    = secondary_nav(:sysadmin)
+    .content
+      = breadcrumb
+      .inner
+        .block-norounded
+          .inner
+            = render "form"
+      = breadcrumb
+  .wat-cf
+
+#sidebar
+  = sidebar_alert

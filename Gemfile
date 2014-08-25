@@ -17,6 +17,7 @@ gem 'redis', "~> 3.0.2"
 gem "ruote-redis", "~> 2.3.0"
 
 gem 'haml-rails', '0.3.4'
+gem 'cancan', '1.6.10'
 
 # Use unicorn as the web server
 # gem 'unicorn'

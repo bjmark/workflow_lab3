@@ -1,0 +1,18 @@
+%table{:border => 1}
+  %thead
+    %tr
+      %th 流程名称
+      %th 流程对象
+      %th 当前处理人
+      %th 发起时间
+      %th 最近更新时间
+      %th
+  %tbody
+    - @processes.each do |p|
+      %tr
+        %td= p.definition_name
+        %td= p.target.try(:name)
+        %td= p.try(:current_position)
+        %td= Time.parse(p.launched_time).beijing_time
+        %td= Time.parse(p.last_active).beijing_time
+        %td.last= link_to "查看", process_path(p.wfid,:workflow_name => p.definition_name)

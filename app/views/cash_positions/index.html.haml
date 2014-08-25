@@ -1,0 +1,19 @@
+%h1 Listing cash_positions
+
+%table{:border => 1}
+  %tr
+    %th 名称
+    %th workflow_status
+    %th
+    %th
+
+  - @cash_positions.each do |cash_position|
+    %tr
+      %td= cash_position.name
+      %td= cash_position.workflow_status.try(:name)
+      %td= link_to '删除', cash_position, :confirm => 'Are you sure?', :method => :delete
+      %td= link_to '审签', new_process_path(:workflow_id => 2, :target_type => 'cash_position', :target_id => cash_position.id),:confirm => 'Are you sure?'
+
+%br
+
+= link_to 'New Cash position', new_cash_position_path

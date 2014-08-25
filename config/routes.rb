@@ -1,5 +1,28 @@
 WorkflowLab::Application.routes.draw do
+  resources :workflow_logs do
+    collection do
+      delete 'delete_all'
+    end
+  end
+
+  resources :contract_applications
+
+  resources :cash_positions
+
+  resources :disbursement_applications
+
   resources :projects
+  resources :users
+  resources :processes
+  resources :workitems
+  resources :process_journals
+  resources :workflow_results
+
+  match 'users/login/:id', :to => 'users#login'
+
+  match '/_ruote' => RuoteKit::Application
+  match '/_ruote/*path' => RuoteKit::Application
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

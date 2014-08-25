@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>WorkflowLab</title>
-  <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults %>
-  <%= csrf_meta_tag %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
+  <head>
+    <title>WorkflowLab</title>
+    <%= stylesheet_link_tag :all %>
+    <%= javascript_include_tag :defaults %>
+    <%= csrf_meta_tag %>
+  </head>
+  <body>
+    <% if !flash.keys.empty? %>
+      <strong>
+        <% flash.each do |k,v| %>
+          <%= "#{k} : #{v}"%><br>
+        <% end %>
+      </strong>
+    <% end %>
+    <% if !current_user %>
+      user: not login
+    <% else %>
+      user:
+      <%= current_user.id %>
+      |
+      <%= "#{current_user.name}"%>
+      |
+      <%= "#{current_user.roles.collect{|e| e.name + ':' + e.code }.inspect}" %>
+      |
+      <%= "#{current_user.departments.collect{|e| e.name}.inspect}" %>
+    <% end%>
+    <hr>
+    <%= link_to '流程管理', '/_ruote' %>
+    |
+    <%= link_to '切换用户', '/users' %>
+    |
+    <%= link_to '合同审签', '/projects' %>
+    |
+    <%= link_to '头寸', '/cash_positions' %>
+    |
+    <%= link_to '放款申请', '/disbursement_applications' %>
+    |
+    <%= link_to '合同起租申请', '/contract_applications' %>
+    <hr>
+    <%= link_to "流程待办事项: #{Ruote::Workitem.for_user(current_user).size}", '/workitems' %>
+    |
+    <%= link_to '流程已办事项', "/processes" %>
+    |
+    <%= link_to '流程办结事项', "/workflow_results" %>
+    |
+    <%= link_to 'workflow_log', "/workflow_logs" %>
+    <hr>
+    <%= yield %>
+  </body>
 </html>

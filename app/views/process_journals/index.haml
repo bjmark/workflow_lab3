@@ -1,0 +1,4 @@
+%h1  "#{@workflow_name}流程"
+= render '/process_journals/table', :process_journals => @process_journals
+- if !@target.blank?
+  = render "#{@target.class.to_s.tableize}/overview", :target => @target
