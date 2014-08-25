@@ -91,7 +91,12 @@ class Ruote::Workitem
         workitems << workitems_via_roles
       end
     end
-    workitems.flatten.compact.sort do |a, b|
+
+    workitems = workitems.flatten.compact
+    workitems = workitems.select do |wi|
+      !(wi.fields['blade']['receiver_id']) or (wi.fields['blade']['receiver_id'].to_i == user.id)
+    end
+    workitems.sort do |a, b|
       b.fields["dispatched_at"] <=> a.fields["dispatched_at"]
     end
   end

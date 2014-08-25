@@ -23,7 +23,7 @@ require Rails.root.join('app/ruote/workflow1_right_setter_participant.rb')
 #RUOTE_STORAGE = Ruote::FsStorage.new("public/ruote/storage/ruote_work_#{Rails.env}")
 
 RUOTE_STORAGE = Ruote::Redis::Storage.new(
-  ::Redis.new(:db => 15, :thread_safe => true), {
+  ::Redis.new(:db => 13, :thread_safe => true), {
     'ruby_eval_allowed' => true })
 
 #RuoteKit.engine = Ruote::Engine.new(Ruote::Worker.new(RUOTE_STORAGE))

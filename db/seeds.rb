@@ -129,6 +129,8 @@ Proc.new do
     '董事长' => 'board_chairman',
     '总裁'   => 'president',
     '副总裁'  => 'vp',
+    '主任委员' => 'committee_director',
+    '评审委员会秘书' => 'committee_secretary',
     '风险管理部审查岗' => 'risk_dept_examiner',
     '风险管理部复核岗' => 'risk_dept_reviewer',
     '风险管理部资产管理岗' => 'risk_dept_asset_manager',
@@ -144,7 +146,6 @@ Proc.new do
     '金融市场资金管理岗' => 'capital_manager',
     '金融市场部负责人' => 'capital_market_dept_head',
     '业务部门负责人' => 'business_dept_head',
-
     '业务经理' => 'business_manager'
   }
 
@@ -202,8 +203,16 @@ Proc.new do
   u.roles << Role.where(:code => 'vp').first
 
 
-  u = User.create(:name => "风险管理部审查岗")
-  u.roles << Role.where(:code => 'risk_dept_examiner').first
+  u = User.create(:name => "主任委员")
+  u.roles << Role.where(:code => 'committee_director').first
+
+  u = User.create(:name => "评审委员会秘书")
+  u.roles << Role.where(:code => 'committee_secretary').first
+
+  ['A','B','C'].each do |e|
+    u = User.create(:name => "风险管理部审查岗#{e}")
+    u.roles << Role.where(:code => 'risk_dept_examiner').first
+  end
   
   u = User.create(:name => "风险管理部复核岗")
   u.roles << Role.where(:code => 'risk_dept_reviewer').first

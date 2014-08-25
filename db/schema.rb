@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140809131619) do
+ActiveRecord::Schema.define(:version => 20140816094550) do
 
   create_table "cash_positions", :force => true do |t|
     t.string   "name"
@@ -103,6 +103,12 @@ ActiveRecord::Schema.define(:version => 20140809131619) do
   create_table "users", :force => true do |t|
     t.string  "name"
     t.boolean "admin"
+  end
+
+  create_table "workflow_logs", :force => true do |t|
+    t.string   "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "workflow_results", :force => true do |t|

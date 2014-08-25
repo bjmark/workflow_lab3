@@ -1,0 +1,23 @@
+= form_tag workitem_path(@workitem), :method => 'PUT'  do
+  %label 审批意见(最多255个字)
+  %br
+  %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5}
+  %br
+  - if @workitem['blade.final_decision_maker_role_history']
+    - @workitem['blade.final_decision_maker_role_history'].each do |m|
+      = m
+      %br
+  - if @workitem.fields['blade']['final_decision_maker_role']
+    = "终审人为: #{Role.where(:code => @workitem.fields['blade']['final_decision_maker_role']).first.name}"
+    %br
+  选择终审人: 
+  %select{:name =>"final_decision_maker_role", :size=>"1"}
+    %option{:value => ''}
+    %option{:value => 'committee_director', :selected=>(@workitem.fields['blade']['final_decision_maker_role'] == 'committee_director')}= '主任委员'
+    %option{:value => 'president', :selected=>(@workitem.fields['blade']['final_decision_maker_role'] == 'president')}= '总裁'
+  %br
+
+  - @submit_values.each do |e|
+    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+  = link_to '取消', request.env['HTTP_REFERER']
+

@@ -1,4 +1,10 @@
 WorkflowLab::Application.routes.draw do
+  resources :workflow_logs do
+    collection do
+      delete 'delete_all'
+    end
+  end
+
   resources :contract_applications
 
   resources :cash_positions
@@ -13,7 +19,7 @@ WorkflowLab::Application.routes.draw do
   resources :workflow_results
 
   match 'users/login/:id', :to => 'users#login'
-  
+
   match '/_ruote' => RuoteKit::Application
   match '/_ruote/*path' => RuoteKit::Application
 

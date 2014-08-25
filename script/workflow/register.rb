@@ -12,13 +12,14 @@ require 'ruote' # gem install ruote
 require 'ruote-redis' # gem install ruote-redis
 
 storage = 
-	Ruote::Redis::Storage.new(::Redis.new(:db => 15, :thread_safe => true), {'ruby_eval_allowed' => true })
+	Ruote::Redis::Storage.new(::Redis.new(:db => 13, :thread_safe => true), {'ruby_eval_allowed' => true })
 
 engine = Ruote::Dashboard.new(storage) 
 
 engine.register do
 	participant /test\d+$/, 'TestParticipant'
   participant 'no_op', Ruote::NoOpParticipant
+  participant 'last_step', Ruote::NoOpParticipant
   participant 'right_setter', 'Workflow1RightSetterParticipant'
 
   # Will do last steps needed upon process completion

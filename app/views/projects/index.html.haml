@@ -1,10 +1,11 @@
 %h1 Listing projects
-
+- #="current_ability.object_id = #{current_ability.object_id}"
 %table{:border => 1}
   %tr
     %th 名称
     %th 主办
     %th workflow_status
+    %th
     %th
     %th
 
@@ -16,7 +17,8 @@
       - #%td= link_to 'Show', project
       - #%td= link_to 'Edit', edit_project_path(project)
       %td= link_to '删除', project, :confirm => 'Are you sure?', :method => :delete
-      %td= link_to '审签', new_process_path(:workflow_id => 1, :target_type => 'project', :target_id => project.id),:confirm => 'Are you sure?'
+      %td= link_to '合同审签', new_process_path(:workflow_id => 1, :target_type => 'project', :target_id => project.id),:confirm => 'Are you sure?'
+      %td= link_to '授信审签', new_process_path(:workflow_id => 13, :target_type => 'project', :target_id => project.id),:confirm => 'Are you sure?'
 
 %br
 
