@@ -3,11 +3,25 @@
   %br
   %textarea{:name => 'workitem[comments]', :maxlength => 255, :cols => 65, :rows => 5}
   %br
-  - @message.each do |m|
-    = m
+  - if @workitem.dispatch?
+    %label.label 派发给#{@workitem.dispatch_to_role.try(:name)}
+    = dispatch_to_select(@workitem.dispatch_to_users(current_user))
     %br
-  - @submit_values.each do |e|
-    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+  - if @workitem.can_delegate?
+    %label.label 指派代办#{@workitem.can_delegate_to_role.try(:name)}
+    = can_delegate_to_select(@workitem.can_delegate_to_users(current_user))
+    %br
+
+  - if @workitem.custom_fields.any?
+    - @workitem.custom_fields.each do |field|
+      - if field['type'] == 'checkbox'
+        = check_box_tag("workitem[fields][#{field['name']}]", 'yes')
+        = field['label']
+    %br
+
+  = workitem_return_button(@workitem) if !@workitem.prev_tag.blank?
+  = workitem_proceed_button(@workitem)
+
   = link_to '取消', request.env['HTTP_REFERER']
 
 

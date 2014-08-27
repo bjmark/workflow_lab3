@@ -1,7 +1,7 @@
-# -*- encoding: utf-8 -*-
-# Ruote::Worktiem
+# encoding: utf-8
 class WorkitemsController < ApplicationController
   #load_and_authorize_resource
+
   def index
     @workitems = Ruote::Workitem.for_user(current_user)
   end
@@ -13,11 +13,10 @@ class WorkitemsController < ApplicationController
   def edit
     @workitem = RuoteKit.storage_participant[params[:id]]
 
-    wk_helper.before_edit
-    @submit_values = wk_helper.merge_submit.keys
-    @message = @workitem.fields['message'] || []
-    @form = wk_helper.form
-    @view = wk_helper.view
+    @workitem.on_participant_entry(current_user)
+    if @workitem.target.errors.any?
+      flash[:alert] = "#{@workitem.target.errors.full_messages.join("\n")}"
+    end
   end
 
   def update
@@ -26,69 +25,75 @@ class WorkitemsController < ApplicationController
     # workitem _CANNOT_ be located, meaning it has been handled by somebody else
     # and it not long available in your queue
     if !@workitem
-      flash[:error] = "无法提交。该事项可能已处理，或已由同岗位/角色的其他用户处理提交。"
+      flash[:alert] = "无法提交。该事项可能已提交，或已由同岗位的其他用户处理提交。"
       redirect_to :action => :index
       return
     end
 
     if !@workitem.belongs_to?(current_user)
-      flash[:error] = "该事项不在当前用户队列，不能提交。ID: #{workitem.fei.sid}"
+      flash[:alert] = "该事项不在当前用户队列，不能提交。ID: #{workitem.fei.sid}"
       redirect_to :action => :index
       return
     end
-
-    op_name = params[:workitem][:submit]
-    error = wk_helper.validate(op_name)
-    if !error.empty?
-      flash[:error] = error
-      redirect_to :action => :edit 
-      return
-    end
-
-    @comments = params[:workitem][:comments] 
-    wk_helper.before_proceed(op_name)
-    wk_helper.exec_submit(op_name)
 
     begin
+      op_name = params[:workitem][:submit]
+      case op_name.to_sym
+      when :proceed
+        fill_in_workitem_fields
+        wf_action = '提交'
+        @workitem.on_participant_exit(current_user)
+      when :return
+        fill_in_workitem_fields
+        wf_action = '退回'
+        @workitem.on_participant_exit(current_user)
+        @workitem.command = [ 'jump', @workitem.prev_tag ]
+      else
+        raise "Operation Not Supported Yet!"
+      end
+
+      # 用于取消overview中某个字段的修改权限
+      ProcessJournal.create!([{
+        :workflow_id => @workitem.workflow_id,
+        :wfid => @workitem.wfid,
+        :current_tree => @workitem.process.current_tree,
+        :user_id => current_user.id,
+        :as_role_id => @workitem.as_role.try(:id),
+        :comments => params[:workitem][:comments],
+        :workflow_action => wf_action,
+        :owner_type => @workitem.target.class,
+        :owner_id => @workitem.target.id
+      }])
+
+      wf_result = WorkflowResult.where(:wfid => @workitem.wfid).first
+      if wf_result
+        wf_result.process_at = Time.now
+        wf_result.final_user_id = current_user.id
+        wf_result.save!
+      end
+
+      # this needs to happen at last, due to the async nature
+      # of Ruote engine which is running in a separate process
+      # @workitem.process will be nil after the .proceed call
       RuoteKit.storage_participant.proceed(@workitem)
-    rescue
-      flash[:error] = "该事项可能已处理，或已由同岗位/角色的其他用户处理提交。"
+
+      flash[:notice] = "流程流转成功。"
       redirect_to :action => :index
-      return
+    rescue Exception => e
+      flash[:error] = "流程处理出错: #{e.message}"
+      render :action => :edit
     end
-
-    ProcessJournal.create!([{
-      :wfid => @workitem.wfid,
-      #:current_tree => RuoteKit.engine.process(workitem.wfid).current_tree,
-      :user_id => current_user.id,
-      :as_role_id => Role.find_by_code(@workitem.participant_name).id,
-      :comments => @comments, 
-      :workflow_action => op_name,
-      :owner_type => @workitem.fields["target"]["type"].camelize,
-      :owner_id => @workitem.fields["target"]["id"],
-      :ok => @workitem.fields["ok"] }
-    ])
-
-    w = WorkflowResult.where(:wfid => @workitem.wfid).first
-    unless w.blank?
-      w.process_at = Time.now
-      w.final_user_id = current_user.id
-      w.save!
-    end
-
-    UserWorkflowResult.check_and_create(w.id, current_user.id)
-
-    redirect_to :action => :index
   end
-  
-  def wk_helper
-    @wk_helper if  @wk_helper
-    
-    class_name = @workitem.fields['blade']['helper']
-    if class_name
-      @wk_helper = Object.const_get(class_name).new(@workitem, self, current_user)
-    else
-      @wk_helper = WorkflowHelper.new(@workitem, self, current_user)
+
+  def workflow_diagram
+    @workitem = RuoteKit.storage_participant[params[:id]]
+    render :partial => "fluo", :layout => false
+  end
+
+  private
+  def fill_in_workitem_fields
+    Array(params[:workitem][:fields]).each do |field_name, value|
+      @workitem.fields[field_name] = value
     end
   end
 end

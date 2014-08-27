@@ -57,13 +57,12 @@ ActiveRecord::Schema.define(:version => 20140816094550) do
   end
 
   create_table "process_journals", :force => true do |t|
-    t.integer  "workflow_id"
+    t.integer  "workflow_id",     :null => false
     t.integer  "user_id"
     t.integer  "as_role_id"
     t.text     "comments"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.boolean  "ok"
+    t.integer  "owner_id",        :null => false
+    t.string   "owner_type",      :null => false
     t.string   "wfid"
     t.text     "original_tree"
     t.text     "current_tree"
@@ -102,6 +101,7 @@ ActiveRecord::Schema.define(:version => 20140816094550) do
 
   create_table "users", :force => true do |t|
     t.string  "name"
+    t.string  "login"
     t.boolean "admin"
   end
 
@@ -112,17 +112,15 @@ ActiveRecord::Schema.define(:version => 20140816094550) do
   end
 
   create_table "workflow_results", :force => true do |t|
-    t.string   "workflow_name"
     t.string   "wfid"
-    t.string   "target"
     t.string   "result"
     t.integer  "final_user_id"
-    t.string   "project"
     t.datetime "process_at"
     t.string   "target_type"
     t.integer  "target_id"
-    t.string   "ok",            :limit => 1
-    t.string   "finish",        :limit => 1
+    t.integer  "workflow_id"
+    t.boolean  "finished",      :default => false
+    t.text     "snapshot"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -133,8 +131,11 @@ ActiveRecord::Schema.define(:version => 20140816094550) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.text     "definition", :null => false
-    t.string   "name"
+    t.text     "definition",   :null => false
+    t.string   "name",         :null => false
+    t.string   "code",         :null => false
+    t.string   "target_model", :null => false
+    t.string   "version",      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

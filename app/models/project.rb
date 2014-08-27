@@ -1,4 +1,6 @@
 class Project < ActiveRecord::Base
+  include WorkflowTarget
+
   belongs_to :workflow_status
   belongs_to :handler, :class_name => "User"
   has_many :cash_positions, :dependent => :destroy
@@ -24,4 +26,5 @@ class Project < ActiveRecord::Base
     self.workflow_status_id = 5
     self.save
   end
+
 end

@@ -33,15 +33,33 @@ class Ruote::ProcessStatus
     end
   end
 
-  # workflow process target, for example, some project
-  def target
-    self.root_workitem.target
-  end
-
   # the participant name the workitem is currently in
   # normally (without concurrence) there should be only one workitem
   # when querying Ruote::ProcessStatus.workitems
   def current_position
     self.workitems.first.try(:current_position)
+  end
+
+  # workflow process target, for example, some project
+  def target
+    target = self.variables["target"]
+
+    # CANNOT use find here since find will raise error if :id doesn't exist
+    target["type"].camelize.constantize.where(:id => target["id"]).first
+  end
+
+  def workflow_id
+    self.variables["workflow_id"]
+  end
+
+
+  def initiator
+    init_id = self.variables["initiator"]["user_id"]
+    init_id.blank? ? nil : User.where(:id => init_id).first
+  end
+
+  def department
+    dept_id = self.variables["initiator"]["business_department_id"]
+    dept_id.blank? ? nil : Department.where(:id => dept_id).first
   end
 end

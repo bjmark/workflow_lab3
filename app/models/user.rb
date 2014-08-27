@@ -13,4 +13,24 @@ class User < ActiveRecord::Base
     end
     nil
   end
+
+  def self.by_login_or_object(user)
+    user = User.find_by_login(user) if user.instance_of? String
+    user.instance_of?(User) ? user : nil
+  end
+
+  def users_with_role_in_my_department(role)
+    users = []
+    return users if !role
+
+    role.users.each do |u|
+      if self == u or self.business_department != u.business_department
+        next
+      end
+
+      users << u
+    end
+
+    users
+  end
 end

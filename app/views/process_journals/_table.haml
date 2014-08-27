@@ -11,7 +11,7 @@
     - process_journals.each do |j|
       %tr
         %td= j.user.try(:name)
-        %td= j.try(:role).try(:name)
+        %td= j.try(:as_role).try(:name)
         %td= j.updated_at.beijing_time
         %td= j.workflow_action
         %td{:width => '30%'}= j.comments

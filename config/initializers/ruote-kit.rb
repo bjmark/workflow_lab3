@@ -5,28 +5,87 @@
 #
 # See http://ruote.rubyforge.org/configuration.html for configuration options of
 # ruote.
-require 'redis' # gem install redis
-require 'ruote' # gem install ruote
-require 'ruote-redis' # gem install ruote-redis
+require 'redis'
+require 'ruote'
+require 'ruote-redis'
 
 
 # load our own Ruote::Workitem extension
 require Rails.root.join('app/models/workitem.rb')
 require Rails.root.join('app/models/process_status.rb')
-require Rails.root.join('app/ruote/test_participant.rb')
 require Rails.root.join('app/ruote/completion_participant.rb')
-require Rails.root.join('app/ruote/completion2_participant.rb')
-require Rails.root.join('app/ruote/workflow1_right_setter_participant.rb')
 
+require 'ruote/log/storage_history'
 
-#require 'ruote/storage/fs_storage'
-#RUOTE_STORAGE = Ruote::FsStorage.new("public/ruote/storage/ruote_work_#{Rails.env}")
+# extend Ruote::Dashboard
+module Ruote
+  class Engine
+    # modify the initializer so it takes a ProcessObserver
+    def initialize(worker_or_storage, opts = true, observer = nil, historian = nil)
+
+      @context = worker_or_storage.context
+      @context.dashboard = self
+
+      @variables = EngineVariables.new(@context.storage)
+
+      self.add_service('blade_observer', observer) if observer
+      self.add_service('history', historian) if historian
+
+      workers = @context.services.select { |ser|
+        ser.respond_to?(:run) && ser.respond_to?(:run_in_thread)
+      }
+
+      return unless opts && workers.any?
+
+      # let's isolate a worker to join
+
+      worker = if opts.is_a?(Hash) && opts[:join]
+        workers.find { |wor| wor.name == 'worker' } || workers.first
+      else
+        nil
+      end
+
+      (workers - Array(worker)).each { |wor| wor.run_in_thread }
+      # launch their thread, but let's not join them
+
+      worker.run if worker
+      # and let's not return
+    end
+
+    # please refer to Ruote::Dashboard#initialize
+    def self.create_with_runner_and_observer(runner, observer_class)
+      @context = runner.context
+      @context.dashboard = self
+      @variables = EngineVariables.new(@context.storage)
+
+      self.add_service('blade_workflow_observer', BladeWorkflowObserver)
+
+      workers = @context.services.select { |ser|
+        ser.respond_to?(:run) && ser.respond_to?(:run_in_thread)
+      }
+
+      # let's isolate a worker to join
+      worker = workers.find { |wor| wor.name == 'worker' } || workers.first
+      (workers - Array(worker)).each { |wor| wor.run_in_thread }
+        # launch their thread, but let's not join them
+
+      worker.run if worker
+        # and let's not return
+    end
+
+    def kill_all_processes
+      processes.each do |process|
+        kill(process.wfid)
+      end
+    end
+  end
+end
 
 RUOTE_STORAGE = Ruote::Redis::Storage.new(
-  ::Redis.new(:db => 13, :thread_safe => true), {
-    'ruby_eval_allowed' => true })
+  ::Redis.new(:db => 14, :thread_safe => true), {
+    'ruby_eval_allowed' => true
+  })
 
-#RuoteKit.engine = Ruote::Engine.new(Ruote::Worker.new(RUOTE_STORAGE))
 RuoteKit.engine = Ruote::Engine.new(RUOTE_STORAGE)
 
 # By default, there is a running worker when you start the Rails server. That is
@@ -47,7 +106,10 @@ RuoteKit.engine = Ruote::Engine.new(RUOTE_STORAGE)
 #     rake ruote:run_worker
 #
 # Stop the task by pressing Ctrl+C
-# Ruote participant registration has been moved to script/workflow/register.rb
+# Ruote participant registration has been moved to:
+#
+#   app/ruote/register_participant.rb
+#
 # The registration needs to be system-wide and should _NOT_ be done here by each
 # individual Rails instance.
 
