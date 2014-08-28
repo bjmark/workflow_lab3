@@ -200,6 +200,28 @@ class Ruote::Workitem
     prev_participant_radial[2]
   end
 
+  def top_participant
+    _top_tag = top_tag
+    return nil unless _top_tag
+
+    p = self.process
+    
+    r = p.past_tags.find{|e| e[0] == _top_tag}
+    top_fei_str = r[1]
+    top_fei = Ruote::FlowExpressionId.from_id(top_fei_str)
+    expid = top_fei.expid
+
+    # use radial notation to get the previous participant
+    exp = Ruote::Reader.to_raw_expid_radial(p.current_tree).find do |e|
+      e[1] == expid
+    end
+
+    exp[2]
+  end
+
+  # for example
+  # a -> b -> c -> b
+  # when in b, prev_tag is c
   def prev_tag
     tag = ''
     radial = prev_participant_radial[3]
@@ -211,6 +233,35 @@ class Ruote::Workitem
     end
 
     tag
+  end
+
+  #pwm new
+  # for example
+  # a -> b -> c -> b
+  # when in b, top_tag is a
+  # pls notice the different with pre_tag
+  def top_tag
+    p = self.process          
+    cur_tag = self.params['tag']
+
+    past_tags = p.past_tags.collect{|e| e[0] }
+    return nil if past_tags.empty?
+
+    unless (past_tags.find{|e| e == cur_tag })
+      return past_tags.last
+    end
+
+    s = nil
+    past_tags.find do |e|
+      if e == cur_tag
+        true
+      else
+        s = e
+        false
+      end
+    end
+
+    s
   end
 
   def task
@@ -237,7 +288,6 @@ class Ruote::Workitem
     end
   end
 
-  private
   def gen_reminder
     puts "Generating reminder ..."
     Array(params["reminder"]).each do |role_or_user|

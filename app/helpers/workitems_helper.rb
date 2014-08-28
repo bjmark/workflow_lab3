@@ -6,7 +6,7 @@ module WorkitemsHelper
   end
 
   def workitem_return_button(workitem)
-    workitem_submit_button("退回给 #{workitem.prev_participant_real_name}", 'return',
+    workitem_submit_button("退回给 #{workitem.real_name(workitem.top_participant)}", 'return',
                            :return, "workitem_return") 
   end
 

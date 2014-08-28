@@ -19,7 +19,7 @@
         = field['label']
     %br
 
-  = workitem_return_button(@workitem) if !@workitem.prev_tag.blank?
+  = workitem_return_button(@workitem) if !@workitem.top_tag.blank?
   = workitem_proceed_button(@workitem)
 
   = link_to '取消', request.env['HTTP_REFERER']
