@@ -1,0 +1,10 @@
+- if @workitem.fields['blade']['default_examiner_id']
+  = "前阶段已指派给: #{User.find(@workitem.fields['blade']['default_examiner_id']).name}"
+  %br
+指派给 : 
+%select{:name =>"examiner_id", :size=>"1"}
+  %option{:value => ''}
+  - Role.where(:code => 'risk_dept_examiner').first.users.each do |u|
+    %option{:value => u.id, :selected=>(@workitem.fields['blade']['default_examiner_id'].to_i == u.id)}= u.name
+
+

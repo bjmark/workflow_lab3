@@ -13,7 +13,12 @@ class WorkitemsController < ApplicationController
   def edit
     @workitem = RuoteKit.storage_participant[params[:id]]
 
-    @workitem.on_participant_entry(current_user)
+    #@workitem.on_participant_entry(current_user)
+    wk_helper.before_edit
+    @custom_fields = wk_helper.custom_fields
+    @form = wk_helper.form
+    @view = wk_helper.view
+
     if @workitem.target.errors.any?
       flash[:alert] = "#{@workitem.target.errors.full_messages.join("\n")}"
     end
@@ -36,22 +41,31 @@ class WorkitemsController < ApplicationController
       return
     end
 
-    begin
-      op_name = params[:workitem][:submit]
-      case op_name.to_sym
-      when :proceed
-        fill_in_workitem_fields
-        wf_action = '提交'
-        @workitem.on_participant_exit(current_user)
-      when :return
-        fill_in_workitem_fields
-        wf_action = '退回'
-        @workitem.on_participant_exit(current_user)
-        @workitem.command = [ 'jump', @workitem.prev_tag ]
-      else
-        raise "Operation Not Supported Yet!"
-      end
+    op_name = params[:workitem][:submit]
+    error = wk_helper.validate(op_name)
+    if !error.empty?
+      flash[:error] = error
+      redirect_to :action => :edit 
+      return
+    end
 
+    @comments = params[:workitem][:comments] 
+    fill_in_workitem_fields
+    wk_helper.before_proceed(op_name)
+
+    case op_name.to_sym
+    when :proceed
+      wf_action = '提交'
+      #@workitem.on_participant_exit(current_user)
+    when :return
+      wf_action = '退回'
+      #@workitem.on_participant_exit(current_user)
+      @workitem.command = [ 'jump', @workitem.prev_tag ]
+    else
+      raise "Operation Not Supported Yet!"
+    end
+
+    begin
       # 用于取消overview中某个字段的修改权限
       ProcessJournal.create!([{
         :workflow_id => @workitem.workflow_id,
@@ -59,7 +73,7 @@ class WorkitemsController < ApplicationController
         :current_tree => @workitem.process.current_tree,
         :user_id => current_user.id,
         :as_role_id => @workitem.as_role.try(:id),
-        :comments => params[:workitem][:comments],
+        :comments => @comments,
         :workflow_action => wf_action,
         :owner_type => @workitem.target.class,
         :owner_id => @workitem.target.id
@@ -90,10 +104,22 @@ class WorkitemsController < ApplicationController
     render :partial => "fluo", :layout => false
   end
 
+  def wk_helper
+    @wk_helper if  @wk_helper
+
+    class_name = @workitem.fields['blade']['helper']
+    if class_name
+      @wk_helper = Object.const_get(class_name).new(@workitem, self, current_user)
+    else
+      @wk_helper = WorkflowHelper.new(@workitem, self, current_user)
+    end
+  end
+
   private
   def fill_in_workitem_fields
     Array(params[:workitem][:fields]).each do |field_name, value|
       @workitem.fields[field_name] = value
     end
   end
+
 end

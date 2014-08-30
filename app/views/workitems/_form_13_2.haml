@@ -11,11 +11,17 @@
   %input{:type => 'radio', :name => 'suggest', :value => 'suspend'}暂缓
   %input{:type => 'text', :name => 'suspend'}
   %br
-  - @message.each do |m|
-    = m
+
+  - if @workitem.custom_fields.any?
+    - @workitem.custom_fields.each do |field|
+      - if field['type'] == 'checkbox'
+        = check_box_tag("workitem[fields][#{field['name']}]", 'yes')
+        = field['label']
     %br
-  - @submit_values.each do |e|
-    %button{:type=>'submit', :name => 'workitem[submit]', :value => e}= e 
+
+  = workitem_return_button(@workitem) if !@workitem.top_tag.blank?
+  = workitem_proceed_button(@workitem)
+
   = link_to '取消', request.env['HTTP_REFERER']
 
 

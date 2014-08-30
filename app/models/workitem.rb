@@ -70,7 +70,7 @@ class Ruote::Workitem
     # directly.
 
     # workitems via explicit user login
-    workitems << RuoteKit.engine.storage_participant.by_participant(user.login)
+    #workitems << RuoteKit.engine.storage_participant.by_participant(user.login)
 
     # the following two roles needs special treatment
     #   :business_manager: should receive only workitems initiated by himself/herself
@@ -99,7 +99,11 @@ class Ruote::Workitem
       end
     end
 
-    workitems.flatten.compact.sort do |a, b|
+    workitems = workitems.flatten.compact
+    workitems = workitems.select do |wi|
+      !(wi.fields['blade']['receiver_id']) or (wi.fields['blade']['receiver_id'].to_i == user.id)
+    end
+    workitems.sort do |a, b|
       b.fields["dispatched_at"] <=> a.fields["dispatched_at"]
     end
   end

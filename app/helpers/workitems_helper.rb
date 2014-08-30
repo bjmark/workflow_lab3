@@ -18,7 +18,7 @@ module WorkitemsHelper
   end
 
   def dispatch_to_select(users)
-    raw("<select id='#dispatch_to_users'>#{user_select_options(users)}</select>")
+    raw("<select id='#dispatch_to_users' name='dispatch_to'>#{user_select_options(users)}</select>")
   end
 
   def user_select_options(users)

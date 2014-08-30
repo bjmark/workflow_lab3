@@ -2,7 +2,7 @@
 = "#{@workitem.wf_name}流程"
 = render '/process_journals/table', :process_journals => ProcessJournal.for_wfid(@workitem.wfid)
 %br
-= render 'form'
+= render @form
 - #= render @view 
 
 

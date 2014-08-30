@@ -1,30 +1,30 @@
-# -*-_ encoding: utf-8 -*-
-class CompletionParticipant
-  include Ruote::LocalParticipant
-
-  def on_workitem
+# encoding: utf-8
+class CompletionParticipant < BladeParticipant
+  def on_workitem(workitem)
     target = workitem.target
-    raise 'invalid target' if !target
 
-    case workitem.fields["ok"] 
-    when "1" # => :approved
+    return handle_invalid_target(workitem) if !target
+
+    workflow_action = ''
+    case workitem.fields["decision"]
+    when "approved"
       target.on_workflow_completion(true, workitem)
-      ok = true
       workflow_action = '通过'
-    when "2"
+    when "cancelled"
       target.on_workflow_cancel
       workflow_action = '取消'
-    else # => :declined
+    when "declined"
       target.on_workflow_completion(false, workitem)
-      ok = false
       workflow_action = '否决'
+    else
+      workflow_action = '未知'
     end
 
-    w = WorkflowResult.where(:wfid => workitem.wfid).first
-    unless w.blank?
-      w.result = workflow_action
-      w.finish = 'y'
-      w.save!
+    wfr = WorkflowResult.where(:wfid => workitem.wfid).first
+    if wfr
+      wfr.result = workflow_action
+      wfr.finished = true
+      wfr.save!
     end
 
     reply
