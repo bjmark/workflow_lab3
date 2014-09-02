@@ -14,14 +14,16 @@ class WorkitemsController < ApplicationController
     @workitem = RuoteKit.storage_participant[params[:id]]
 
     #@workitem.on_participant_entry(current_user)
+    #debugger
     wk_helper.before_edit
     @custom_fields = wk_helper.custom_fields
     @form = wk_helper.form
     @view = wk_helper.view
-
+=begin
     if @workitem.target.errors.any?
       flash[:alert] = "#{@workitem.target.errors.full_messages.join("\n")}"
     end
+=end
   end
 
   def update
@@ -105,7 +107,7 @@ class WorkitemsController < ApplicationController
   end
 
   def wk_helper
-    @wk_helper if  @wk_helper
+    return @wk_helper if  @wk_helper
 
     class_name = @workitem.fields['blade']['helper']
     if class_name

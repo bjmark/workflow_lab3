@@ -25,10 +25,12 @@ describe ProjectsController do
   # adjust the attributes here as well.
   let(:valid_attributes) { {  } }
 
+  let(:login_user) { User.create! }
+  
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # ProjectsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { { :user_id => login_user.id } }
 
   describe "GET index" do
     it "assigns all projects as @projects" do

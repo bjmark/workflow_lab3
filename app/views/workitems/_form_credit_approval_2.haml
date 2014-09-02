@@ -13,10 +13,10 @@
   %br
 
   - if @workitem.custom_fields.any?
-    - @workitem.custom_fields.each do |field|
-      - if field['type'] == 'checkbox'
-        = check_box_tag("workitem[fields][#{field['name']}]", 'yes')
-        = field['label']
+    - @workitem.custom_fields.each do |k,v|
+      - if v['type'] == 'checkbox'
+        = check_box_tag("workitem[fields][#{v['name']}]", 'yes')
+        = k
     %br
 
   = workitem_return_button(@workitem) if !@workitem.top_tag.blank?

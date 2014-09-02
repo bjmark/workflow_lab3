@@ -3,7 +3,7 @@ namespace :ruote do
   desc "Register Ruote Workflow Participant for Blade"
   task :register_blade_participants => :environment do
     RuoteKit.engine.register do
-      # participant 'no_op', Ruote::NoOpParticipant
+      participant 'no_op', Ruote::NoOpParticipant
       # Will do last steps needed upon process completion
       participant 'completer', 'CompletionParticipant'
 

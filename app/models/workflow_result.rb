@@ -1,10 +1,9 @@
 # encoding: UTF-8
 class WorkflowResult < ActiveRecord::Base
   belongs_to :final_user, :class_name => 'User'
-  has_many :user_workflow_results
 
-  scope :project_like, 
-    lambda {|word| word.blank? ? where('') : where('project like ? or workflow_name like ?',"%#{word}%","%#{word}%")}
+  #scope :project_like, 
+  #  lambda {|word| word.blank? ? where('') : where('project like ? or workflow_name like ?',"%#{word}%","%#{word}%")}
 
   def self.target_name(obj)
     case obj
@@ -34,5 +33,10 @@ class WorkflowResult < ActiveRecord::Base
     [target,project]
   end
 
+  # workflow processes that the user participated
+  def self.for_user(user)
+    wfids = ProcessJournal.wfids_for_user(user)
+    self.where(:wfid => wfids)
+  end
 end
 

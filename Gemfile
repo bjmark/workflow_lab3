@@ -42,4 +42,5 @@ group :development, :test do
 # gem 'webrat'
 # gem 'rspec-rails', '~> 3.0.0'
   gem 'rspec-rails', '~> 2.14'
+  gem 'debugger', '~> 1.5.0'
 end

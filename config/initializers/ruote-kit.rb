@@ -82,7 +82,7 @@ module Ruote
 end
 
 RUOTE_STORAGE = Ruote::Redis::Storage.new(
-  ::Redis.new(:db => 14, :thread_safe => true), {
+  ::Redis.new(:db => 12, :thread_safe => true), {
     'ruby_eval_allowed' => true
   })
 

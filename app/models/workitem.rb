@@ -100,9 +100,14 @@ class Ruote::Workitem
     end
 
     workitems = workitems.flatten.compact
+    
+    #check if sending to specific user
     workitems = workitems.select do |wi|
-      !(wi.fields['blade']['receiver_id']) or (wi.fields['blade']['receiver_id'].to_i == user.id)
+      _tag = wi.params['tag']
+      receiver_id = "#{_tag.gsub('.','-')}_user_id"
+      !(wi.fields['blade'][receiver_id]) or (wi.fields['blade'][receiver_id].to_i == user.id)
     end
+
     workitems.sort do |a, b|
       b.fields["dispatched_at"] <=> a.fields["dispatched_at"]
     end
@@ -245,6 +250,8 @@ class Ruote::Workitem
   # when in b, top_tag is a
   # pls notice the different with pre_tag
   def top_tag
+    return nil if self.params['no_back']
+
     p = self.process          
     cur_tag = self.params['tag']
 

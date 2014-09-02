@@ -146,7 +146,9 @@ Proc.new do
     '金融市场资金管理岗' => 'capital_manager',
     '金融市场部负责人' => 'capital_market_dept_head',
     '业务部门负责人' => 'business_dept_head',
-    '业务经理' => 'business_manager'
+    '业务经理' => 'business_manager',
+    '营销管理部负责人' => 'marketing_dept_head',
+    '营销管理部业务管理岗' => 'marketing_dept_staff'
   }
 
   id = 0
@@ -206,12 +208,13 @@ Proc.new do
   u = User.create(:name => "主任委员")
   u.roles << Role.where(:code => 'committee_director').first
 
-  u = User.create(:name => "评审委员会秘书")
-  u.roles << Role.where(:code => 'committee_secretary').first
+  #u = User.create(:name => "评审委员会秘书")
+  #u.roles << Role.where(:code => 'committee_secretary').first
 
   ['A','B','C'].each do |e|
     u = User.create(:name => "风险管理部审查岗#{e}")
     u.roles << Role.where(:code => 'risk_dept_examiner').first
+    u.roles << Role.where(:code => 'committee_secretary').first
   end
   
   u = User.create(:name => "风险管理部复核岗")
@@ -249,5 +252,11 @@ Proc.new do
   
   u = User.create(:name => "金融市场部负责人")
   u.roles << Role.where(:code => 'capital_market_dept_head').first
+  
+  u = User.create(:name => "营销管理部负责人")
+  u.roles << Role.where(:code => 'marketing_dept_head').first
+  
+  u = User.create(:name => "营销管理部业务管理岗")
+  u.roles << Role.where(:code => 'marketing_dept_staff').first
 end.call
 
