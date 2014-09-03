@@ -1,0 +1,5 @@
+指派给 : 
+%select{:name =>"business_manager_id", :size=>"1"}
+  %option{:value => ''}
+  - @other_dept_business_managers.each do |u|
+    %option{:value => u.id, :selected=>(@workitem.fields['blade']['other_dept_business_manager_id'].to_i == u.id)}= u.name
