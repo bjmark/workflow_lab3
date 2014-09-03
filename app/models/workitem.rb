@@ -83,31 +83,35 @@ class Ruote::Workitem
       workitems_via_roles = []
       workitems_via_roles << RuoteKit.engine.storage_participant.by_participant(role_code)
       workitems_via_roles = workitems_via_roles.flatten.compact
-      case role_code
-      when "business_manager"
-        workitems_via_roles.each do |workitem|
-          workitems << workitem if workitem.initiator == user
-        end
-      when "business_dept_head"
-        workitems_via_roles.each do |workitem|
-          if workitem.business_department == user.business_department
+
+      workitems_via_roles.each do |workitem|
+        _tag = workitem.params['tag']
+        receiver_id = "#{_tag.gsub('.','-')}_user_id"
+        receiver_id = workitem.fields['blade'][receiver_id]  
+
+        case role_code
+        when "business_manager"
+          #nil.to_i == 0
+          if (receiver_id.to_i == user.id) or (!receiver_id and workitem.initiator == user)  
+            workitems << workitem 
+          end
+        when "business_dept_head"
+          bd = workitem.business_department
+          bd_id = bd ? bd.id : nil
+          u_bd = user.business_department
+          u_bd_id = u_bd ? u_bd.id : nil
+          if (receiver_id and receiver_id.to_i == u_bd_id ) or (!receiver_id and bd_id.to_i == u_bd_id.to_i)
             workitems << workitem
           end
+        else
+          if (receiver_id.to_i == user.id) or !receiver_id  
+            workitems << workitems_via_roles
+          end
         end
-      else
-        workitems << workitems_via_roles
       end
     end
 
     workitems = workitems.flatten.compact
-    
-    #check if sending to specific user
-    workitems = workitems.select do |wi|
-      _tag = wi.params['tag']
-      receiver_id = "#{_tag.gsub('.','-')}_user_id"
-      !(wi.fields['blade'][receiver_id]) or (wi.fields['blade'][receiver_id].to_i == user.id)
-    end
-
     workitems.sort do |a, b|
       b.fields["dispatched_at"] <=> a.fields["dispatched_at"]
     end
