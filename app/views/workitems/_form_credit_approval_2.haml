@@ -10,18 +10,11 @@
   %br
   %input{:type => 'radio', :name => 'suggest', :value => 'suspend'}暂缓
   %input{:type => 'text', :name => 'suspend'}
-  %br
-
-  - if @workitem.custom_fields.any?
-    - @workitem.custom_fields.each do |k,v|
-      - if v['type'] == 'checkbox'
-        = check_box_tag("workitem[fields][#{v['name']}]", 'yes')
-        = k
-    %br
+  %div.sele_path
+    = render 'custom_fields'
 
   = workitem_return_button(@workitem) if !@workitem.top_tag.blank?
   = workitem_proceed_button(@workitem)
-
   = link_to '取消', request.env['HTTP_REFERER']
 
 

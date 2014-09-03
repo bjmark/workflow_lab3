@@ -1,0 +1,10 @@
+- if @custom_fields
+  - @custom_fields.each do |k,v|
+    - if v['type'] == 'checkbox'
+      %input{:type=>"hidden", :name=>"workitem[fields][#{v['name']}]", :value=>'no'}
+      = check_box_tag("workitem[fields][#{v['name']}]", 'yes')
+      = k
+    - if v['type'] == 'radio'
+      %input{:type=>'radio', :name=>"workitem[fields][#{v['name']}]", :value=>v['value']}
+      = k
+
