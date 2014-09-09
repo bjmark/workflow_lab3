@@ -35,4 +35,7 @@
 #rails g scaffold cash_position
 #rails g model financial_term
 #rails g scaffold contract_application
-rails g scaffold workflow_log
+#rails g scaffold workflow_log
+
+#9-9
+rails g controller page
