@@ -235,6 +235,9 @@ Proc.new do
   
   u = User.create(:name => "风险管理部放款复核岗")
   u.roles << Role.where(:code => 'risk_dept_disbursement_reviewer').first
+
+  u = User.create(:name => "风险管理部资产管理岗")
+  u.roles << Role.where(:code => 'risk_dept_asset_manager').first
   
   u = User.create(:name => "综合管理部负责人")
   u.roles << Role.where(:code => 'admin_dept_head').first
