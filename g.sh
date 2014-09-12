@@ -38,4 +38,4 @@
 #rails g scaffold workflow_log
 
 #9-9
-rails g controller page
+rails g controller pages

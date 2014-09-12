@@ -143,6 +143,7 @@ Proc.new do
     '计财部核算岗' => 'accounting_dept_accounting_post',
     '计财部负责人' => 'accounting_dept_head',
     '计财部考核岗' => 'accounting3',
+    '计财部库管员' => 'accounting_warehouse_keeper',
     '金融市场资金管理岗' => 'capital_manager',
     '金融市场部负责人' => 'capital_market_dept_head',
     '业务部门负责人' => 'business_dept_head',
@@ -234,6 +235,9 @@ Proc.new do
   
   u = User.create(:name => "风险管理部放款复核岗")
   u.roles << Role.where(:code => 'risk_dept_disbursement_reviewer').first
+
+  u = User.create(:name => "风险管理部资产管理岗")
+  u.roles << Role.where(:code => 'risk_dept_asset_manager').first
   
   u = User.create(:name => "综合管理部负责人")
   u.roles << Role.where(:code => 'admin_dept_head').first
@@ -246,6 +250,9 @@ Proc.new do
   
   u = User.create(:name => "计财部考核岗")
   u.roles << Role.where(:code => 'accounting3').first
+  
+  u = User.create(:name => "计财部库管员")
+  u.roles << Role.where(:code => 'accounting_warehouse_keeper').first
   
   u = User.create(:name => "金融市场资金管理岗")
   u.roles << Role.where(:code => 'capital_manager').first
