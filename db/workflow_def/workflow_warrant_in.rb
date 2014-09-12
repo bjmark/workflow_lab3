@@ -1,1 +1,1 @@
-../../../workflow_spec3/workflow_warrant_in.rb
+../../../blade/db/workflow_def/workflow_warrant_in.rb
