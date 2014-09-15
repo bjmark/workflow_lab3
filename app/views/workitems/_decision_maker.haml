@@ -1,0 +1,10 @@
+- if @workitem['blade.decision_maker_history']
+  - @workitem['blade.decision_maker_history'].each do |m|
+    = m
+    %br
+选择终审人: 
+%select{:name =>"decision_maker", :size=>"1"}
+  %option{:value => ''}
+  - Role.where(:code => @workitem['blade.decision_maker_scope']).each do |e|
+    %option{:value => e.code, :selected=>(@workitem.fields['blade']['decision_maker'] == e.code)}= e.name
+
