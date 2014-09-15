@@ -1,1 +1,1 @@
-../../../workflow_spec3/workflow_credit_approval.rb
+../../../blade/db/workflow_def/workflow_credit_approval.rb
