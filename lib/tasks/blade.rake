@@ -22,7 +22,8 @@ namespace :blade do
 =end
     :credit_approval,
     :marketing_record,
-    :warrant_in
+    :warrant_in,
+    :warrant_out
   ]
 
   desc "从db/workflow_def/目录下，将文件名为workflow_<流程代码>的流程定义导入系统"
