@@ -38,4 +38,7 @@
 #rails g scaffold workflow_log
 
 #9-9
-rails g controller pages
+#rails g controller pages
+
+#9-25
+rails g migration add_column_to_workflow_results

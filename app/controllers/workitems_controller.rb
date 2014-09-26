@@ -27,6 +27,7 @@ class WorkitemsController < ApplicationController
   end
 
   def update
+    #(render 'debug') and return
     @workitem = RuoteKit.storage_participant[params[:id]]
 
     # workitem _CANNOT_ be located, meaning it has been handled by somebody else
@@ -37,8 +38,8 @@ class WorkitemsController < ApplicationController
       return
     end
 
-    if !@workitem.belongs_to?(current_user)
-      flash[:alert] = "该事项不在当前用户队列，不能提交。ID: #{workitem.fei.sid}"
+    if params[:workitem][:submit]!='pullback' && !@workitem.belongs_to?(current_user)
+      flash[:alert] = "该事项不在当前用户队列，不能提交。ID: #{@workitem.fei.sid}"
       redirect_to :action => :index
       return
     end
@@ -62,6 +63,9 @@ class WorkitemsController < ApplicationController
     when :return
       wf_action = '退回'
       #@workitem.on_participant_exit(current_user)
+      @workitem.command = [ 'jump', @workitem.prev_tag ]
+    when :pullback
+      wf_action = '回撤'
       @workitem.command = [ 'jump', @workitem.prev_tag ]
     else
       raise "Operation Not Supported Yet!"

@@ -15,4 +15,12 @@
         %td= p.try(:current_position)
         %td= Time.parse(p.launched_time).beijing_time
         %td= Time.parse(p.last_active).beijing_time
-        %td.last= link_to "查看", process_path(p.wfid,:workflow_name => p.definition_name)
+        %td.last
+          = link_to "查看", process_path(p.wfid,:workflow_name => p.definition_name)
+          - wr = WorkflowResult.where(:wfid=>p.wfid).first
+          - pj = ProcessJournal.where(:wfid=>p.wfid).order('id DESC').limit(1).first
+          - if wr.final_user_id == current_user.id && pj.workflow_action != '回撤'
+            - wis = RuoteKit.engine.storage_participant.by_wfid(p.wfid)
+            - if !wis.blank?
+              = link_to '回撤', workitem_path(wis.first,'workitem[submit]'=>'pullback'),
+                :method=>'put',:confirm=>'are you sure?'
