@@ -2,6 +2,7 @@
 class WorkflowResult < ActiveRecord::Base
   serialize :snapshot, ActiveSupport::HashWithIndifferentAccess
   belongs_to :final_user, :class_name => 'User'
+  belongs_to :workflow
 
   def snapshot
     read_attribute(:snapshot) ||

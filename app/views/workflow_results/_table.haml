@@ -2,7 +2,7 @@
   %thead
     %tr
       %th 流程名称
-      %th 流程对象
+      -#%th 流程对象
       %th 处理时间
       %th 结果
       %th 处理用户
@@ -10,10 +10,10 @@
   - @workflow_results.each do |p|
     %tbody
       %tr
-        %td= p.workflow_name
-        %td= p.target
+        %td= p.workflow.name
+        -#%td= p.target
         %td= p.process_at.beijing_time
         %td= p.result
         %td= p.final_user.name
-        %td= link_to "查看审批审见", process_journals_path(:wfid =>p.wfid,:workflow_name => p.workflow_name)
+        %td= link_to "查看审批审见", process_journals_path(:wfid =>p.wfid,:workflow_name => p.workflow.name)
 
