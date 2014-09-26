@@ -3,7 +3,12 @@ class WorkitemsController < ApplicationController
   #load_and_authorize_resource
 
   def index
-    @workitems = Ruote::Workitem.for_user(current_user)
+    #@workitems = Ruote::Workitem.for_user(current_user)
+    @workitems = []
+    ([current_user] + current_user.principals).each do |u|
+      @workitems += Ruote::Workitem.for_user(u)
+    end
+    @workitems
   end
 
   def show

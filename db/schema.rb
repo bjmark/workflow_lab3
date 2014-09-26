@@ -11,7 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140816094550) do
+ActiveRecord::Schema.define(:version => 20140926032909) do
+
+  create_table "agent_principals", :force => true do |t|
+    t.integer  "agent_id"
+    t.integer  "principal_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "agent_relations", :force => true do |t|
+    t.integer  "agent_id"
+    t.integer  "principal_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cash_positions", :force => true do |t|
     t.string   "name"

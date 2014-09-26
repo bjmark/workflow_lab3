@@ -1,0 +1,13 @@
+%h1 Agents
+%table{:border=>1}
+  %tr
+    %th 名字
+    %th 开始日期
+    %th 结束日期
+  - @agent_relations.each do |g|
+    %tr
+      %td= g.agent.name
+      %td= g.start_date
+      %td= g.end_date
+
+= link_to 'New Agent', new_agent_path
