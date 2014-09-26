@@ -41,4 +41,10 @@
 #rails g controller pages
 
 #9-25
-rails g migration add_column_to_workflow_results
+#rails g migration add_column_to_workflow_results, no need
+
+#9-26
+#rails g model agent_relation
+#rails g model agent_principal
+#rails g controller agents
+rails g  controller agent_principals

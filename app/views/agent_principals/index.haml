@@ -1,0 +1,15 @@
+%h1 Agents
+%table{:border=>1}
+  %tr
+    %th 名字
+    %th 开始日期
+    %th 结束日期
+    %th 
+  - @agent_principals.each do |g|
+    %tr
+      %td= g.agent.name
+      %td= g.start_date
+      %td= g.end_date
+      %td= link_to '删除', g, :confirm => 'Are you sure?', :method => :delete
+
+= link_to 'New Agent', new_agent_principal_path

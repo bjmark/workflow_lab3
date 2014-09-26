@@ -2,8 +2,14 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :departments
 
-  has_many :user_workflow_results
-  has_many :workflow_results, :through => :user_workflow_results
+  has_many :agent_relations, :class_name=>'AgentPrincipal', :foreign_key=>'principal_id' 
+  has_many :principal_relations, :class_name=>'AgentPrincipal', :foreign_key=>'agent_id' 
+
+  has_many :agents, :through=>:agent_relations
+  has_many :principals, :through=>:principal_relations
+
+  #has_many :user_workflow_results
+  #has_many :workflow_results, :through => :user_workflow_results
 
   # returns the first business department the user belongs to
   # a user should _NOT_ belong to more than one business department
